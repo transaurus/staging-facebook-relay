@@ -1,0 +1,61 @@
+==================================== INPUT ====================================
+query UpdatableQuery @updatable {
+  me {
+    actor {
+      ... on User {
+        __typename
+        ...Assignable_user @alias
+      }
+      ... on Page {
+        __typename
+        ...Assignable_page @alias
+      }
+    }
+  }
+}
+
+fragment Assignable_user on User @assignable {
+  __typename
+}
+
+fragment Assignable_page on Page @assignable {
+  __typename
+}
+==================================== OUTPUT ===================================
+import { FragmentRefs } from "relay-runtime";
+export type UpdatableQuery$variables = Record<PropertyKey, never>;
+export type UpdatableQuery$data = {
+  get me(): {
+    get actor(): {
+      readonly __typename: "Page";
+      get Assignable_page(): Record<PropertyKey, never> | null | undefined;
+      set Assignable_page(value: {
+        readonly __typename: "Page";
+        readonly __id: string;
+        readonly " $fragmentSpreads": FragmentRefs<"Assignable_page">;
+      } | null | undefined);
+    } | {
+      readonly __typename: "User";
+      get Assignable_user(): Record<PropertyKey, never> | null | undefined;
+      set Assignable_user(value: {
+        readonly __typename: "User";
+        readonly __id: string;
+        readonly " $fragmentSpreads": FragmentRefs<"Assignable_user">;
+      } | null | undefined);
+    } | {
+      // This will never be '%other', but we need some
+      // value in case none of the concrete values match.
+      readonly __typename: "%other";
+    } | null | undefined;
+    set actor(value: null | undefined);
+  } | null | undefined;
+  set me(value: null | undefined);
+};
+export type UpdatableQuery = {
+  response: UpdatableQuery$data;
+  variables: UpdatableQuery$variables;
+};
+-------------------------------------------------------------------------------
+import { FragmentRefs } from "relay-runtime";
+-------------------------------------------------------------------------------
+import { FragmentRefs } from "relay-runtime";

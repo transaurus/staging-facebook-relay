@@ -1,0 +1,11 @@
+fragment inlineDataFragmentGlobalVarsFragment on Query {
+  me {
+    ...inlineDataFragmentGlobalVarsProfile
+  }
+}
+
+fragment inlineDataFragmentGlobalVarsProfile on User @inline {
+  profilePicture(size: $pictureSize) {
+    uri
+  }
+}

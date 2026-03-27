@@ -1,0 +1,13 @@
+fragment refetchableFragmentOnNodeWithMissingId_RefetchableFragment on Node
+@refetchable(queryName: "RefetchableFragmentQuery") {
+  ... on User {
+    name
+    ...refetchableFragmentOnNodeWithMissingId_ProfilePicture @alias
+  }
+}
+
+fragment refetchableFragmentOnNodeWithMissingId_ProfilePicture on User {
+  profilePicture(size: $size) {
+    uri
+  }
+}

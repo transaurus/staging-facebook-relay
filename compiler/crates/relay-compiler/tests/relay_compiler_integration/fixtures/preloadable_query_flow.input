@@ -1,0 +1,20 @@
+//- foo.js
+graphql`
+  query fooQuery @preloadable {
+   userName
+  }`;
+
+//- relay.config.json
+{
+  "language": "flow",
+  "schema": "./schema.graphql",
+  "persistConfig": {
+    "file": "./operations.json"
+  }
+}
+
+//- operations.json
+{}
+
+//- schema.graphql
+type Query { userName: String }

@@ -1,0 +1,24 @@
+==================================== INPUT ====================================
+fragment SomeFragment on User {
+  nearest_neighbor {
+    profile_picture @required(action: LOG) {
+      uri @required(action: LOG)
+    }
+  }
+}
+==================================== OUTPUT ===================================
+import type { FragmentType } from "relay-runtime";
+declare export opaque type SomeFragment$fragmentType: FragmentType;
+export type SomeFragment$data = {|
+  +nearest_neighbor: ?{|
+    +profile_picture: {|
+      +uri: string,
+    |},
+  |},
+  +$fragmentType: SomeFragment$fragmentType,
+|};
+export type SomeFragment$key = {
+  +$data?: SomeFragment$data,
+  +$fragmentSpreads: SomeFragment$fragmentType,
+  ...
+};

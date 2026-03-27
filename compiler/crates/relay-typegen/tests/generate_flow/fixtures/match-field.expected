@@ -1,0 +1,72 @@
+==================================== INPUT ====================================
+fragment NameRendererFragment on User {
+  id
+  nameRenderer @match {
+    ...PlainUserNameRenderer_name @module(name: "PlainUserNameRenderer.react")
+    ...MarkdownUserNameRenderer_name
+      @module(name: "MarkdownUserNameRenderer.react")
+  }
+}
+
+fragment PlainUserNameRenderer_name on PlainUserNameRenderer {
+  plaintext
+  data {
+    text
+  }
+}
+
+fragment MarkdownUserNameRenderer_name on MarkdownUserNameRenderer {
+  markdown
+  data {
+    markup
+  }
+}
+==================================== OUTPUT ===================================
+import type { FragmentType } from "relay-runtime";
+declare export opaque type MarkdownUserNameRenderer_name$fragmentType: FragmentType;
+export type MarkdownUserNameRenderer_name$data = {|
+  +data: ?{|
+    +markup: ?string,
+  |},
+  +markdown: ?string,
+  +$fragmentType: MarkdownUserNameRenderer_name$fragmentType,
+|};
+export type MarkdownUserNameRenderer_name$key = {
+  +$data?: MarkdownUserNameRenderer_name$data,
+  +$fragmentSpreads: MarkdownUserNameRenderer_name$fragmentType,
+  ...
+};
+-------------------------------------------------------------------------------
+import type { MarkdownUserNameRenderer_name$fragmentType } from "MarkdownUserNameRenderer_name.graphql";
+import type { PlainUserNameRenderer_name$fragmentType } from "PlainUserNameRenderer_name.graphql";
+import type { FragmentType } from "relay-runtime";
+declare export opaque type NameRendererFragment$fragmentType: FragmentType;
+export type NameRendererFragment$data = {|
+  +id: string,
+  +nameRenderer: ?{|
+    +__fragmentPropName?: ?string,
+    +__module_component?: ?string,
+    +$fragmentSpreads: MarkdownUserNameRenderer_name$fragmentType & PlainUserNameRenderer_name$fragmentType,
+  |},
+  +$fragmentType: NameRendererFragment$fragmentType,
+|};
+export type NameRendererFragment$key = {
+  +$data?: NameRendererFragment$data,
+  +$fragmentSpreads: NameRendererFragment$fragmentType,
+  ...
+};
+-------------------------------------------------------------------------------
+import type { FragmentType } from "relay-runtime";
+declare export opaque type PlainUserNameRenderer_name$fragmentType: FragmentType;
+export type PlainUserNameRenderer_name$data = {|
+  +data: ?{|
+    +text: ?string,
+  |},
+  +plaintext: ?string,
+  +$fragmentType: PlainUserNameRenderer_name$fragmentType,
+|};
+export type PlainUserNameRenderer_name$key = {
+  +$data?: PlainUserNameRenderer_name$data,
+  +$fragmentSpreads: PlainUserNameRenderer_name$fragmentType,
+  ...
+};

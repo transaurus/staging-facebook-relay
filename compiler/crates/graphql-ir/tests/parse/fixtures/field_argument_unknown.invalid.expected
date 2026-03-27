@@ -1,0 +1,15 @@
+==================================== INPUT ====================================
+# expected-to-throw
+query TestQuery {
+  task(cucumber: 123) {
+    title
+  }
+}
+==================================== ERROR ====================================
+✖︎ Unknown argument 'cucumber' on field 'Query.task'. Did you mean `number`?
+
+  field_argument_unknown.invalid.graphql:3:8
+    2 │ query TestQuery {
+    3 │   task(cucumber: 123) {
+      │        ^^^^^^^^
+    4 │     title

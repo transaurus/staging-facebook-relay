@@ -1,0 +1,50 @@
+==================================== INPUT ====================================
+fragment RefetchableFragmentFoo on RefetchableInterfaceFoo
+  @refetchable(queryName: "RefetchableFragmentFooQuery") {
+  id
+}
+
+
+# %extensions%
+
+interface RefetchableInterfaceFoo @fetchable(field_name: "id") {
+    id: ID!
+}
+
+extend type Query {
+  fetch__RefetchableInterfaceFoo(id: ID!): RefetchableInterfaceFoo
+}
+==================================== OUTPUT ===================================
+query RefetchableFragmentFooQuery(
+  $id: ID!
+) @__RefetchableDerivedFromMetadata
+# RefetchableDerivedFromMetadata(
+#     FragmentDefinitionName(
+#         "RefetchableFragmentFoo",
+#     ),
+# )
+ {
+  fetch__RefetchableInterfaceFoo(id: $id) {
+    ...RefetchableFragmentFoo
+  }
+}
+
+fragment RefetchableFragmentFoo on RefetchableInterfaceFoo @refetchable(queryName: "RefetchableFragmentFooQuery") @__RefetchableMetadata
+# RefetchableMetadata {
+#     operation_name: OperationDefinitionName(
+#         "RefetchableFragmentFooQuery",
+#     ),
+#     path: [
+#         "fetch__RefetchableInterfaceFoo",
+#     ],
+#     identifier_info: Some(
+#         RefetchableIdentifierInfo {
+#             identifier_field: "id",
+#             identifier_query_variable_name: "id",
+#         },
+#     ),
+#     is_prefetchable_pagination: false,
+# }
+ {
+  id
+}

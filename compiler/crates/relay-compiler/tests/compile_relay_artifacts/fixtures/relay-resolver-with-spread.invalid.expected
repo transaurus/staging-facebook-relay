@@ -1,0 +1,42 @@
+==================================== INPUT ====================================
+# expected-to-throw
+
+fragment relayResolverWithSpread_PopStarNameResolverFragment_name on User {
+  name
+  ...relayResolverWithSpread_UserFragment
+}
+
+fragment relayResolverWithSpread_UserFragment on User {
+  id
+}
+
+
+query relayResolverWithSpread_Query {
+  node(id: "SOME_ID") {
+    ... on User {
+      pop_star_name
+    }
+  }
+}
+
+# %extensions%
+
+extend type User {
+  pop_star_name: String @relay_resolver(fragment_name: "relayResolverWithSpread_PopStarNameResolverFragment_name", import_path: "./path/to/PopStarNameResolver.js")
+}
+==================================== ERROR ====================================
+✖︎ Expected fragment spread into Relay Resolver root fragment to be annotated with `@inline` or `@relay(mask: false)`. Relay Resolvers only support reading `@inline` fragments and unmasked fragments.
+
+  relay-resolver-with-spread.invalid.graphql:5:6
+    4 │   name
+    5 │   ...relayResolverWithSpread_UserFragment
+      │      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    6 │ }
+
+  ℹ︎ Fragment is defined
+
+  relay-resolver-with-spread.invalid.graphql:8:10
+    7 │ 
+    8 │ fragment relayResolverWithSpread_UserFragment on User {
+      │          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    9 │   id

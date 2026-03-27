@@ -1,0 +1,11 @@
+subscription SubscriptionWithValidNameSubscription {
+    feedbackLikeSubscribe(input: null) {
+        __typename
+    }
+}
+
+subscription SubscriptionWithValidNameSecondSubscription {
+    feedbackLikeSubscribe(input: null) {
+        __typename
+    }
+}

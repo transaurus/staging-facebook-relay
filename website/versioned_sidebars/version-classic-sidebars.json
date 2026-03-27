@@ -1,0 +1,102 @@
+{
+  "docs": [
+    {
+      "type": "category",
+      "label": "Relay Classic Guides",
+      "items": [
+        {
+          "type": "doc",
+          "id": "introduction-to-relay"
+        },
+        {
+          "type": "doc",
+          "id": "classic-guides-containers"
+        },
+        {
+          "type": "doc",
+          "id": "classic-guides-routes"
+        },
+        {
+          "type": "doc",
+          "id": "classic-guides-root-container"
+        },
+        {
+          "type": "doc",
+          "id": "classic-guides-ready-state"
+        },
+        {
+          "type": "doc",
+          "id": "classic-guides-mutations"
+        },
+        {
+          "type": "doc",
+          "id": "classic-guides-network-layer"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Relay Classic API",
+      "items": [
+        {
+          "type": "doc",
+          "id": "classic-api-reference-relay"
+        },
+        {
+          "type": "doc",
+          "id": "classic-api-reference-relay-container"
+        },
+        {
+          "type": "doc",
+          "id": "classic-api-reference-relay-route"
+        },
+        {
+          "type": "doc",
+          "id": "classic-api-reference-relay-renderer"
+        },
+        {
+          "type": "doc",
+          "id": "classic-api-reference-relay-root-container"
+        },
+        {
+          "type": "doc",
+          "id": "classic-api-reference-relay-ql"
+        },
+        {
+          "type": "doc",
+          "id": "classic-api-reference-relay-mutation"
+        },
+        {
+          "type": "doc",
+          "id": "classic-api-reference-relay-graphql-mutation"
+        },
+        {
+          "type": "doc",
+          "id": "classic-api-reference-relay-proptypes"
+        },
+        {
+          "type": "doc",
+          "id": "classic-api-reference-relay-store"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Relay Classic Interfaces",
+      "items": [
+        {
+          "type": "doc",
+          "id": "classic-interfaces-relay-mutation-request"
+        },
+        {
+          "type": "doc",
+          "id": "classic-interfaces-relay-network-layer"
+        },
+        {
+          "type": "doc",
+          "id": "classic-interfaces-relay-query-request"
+        }
+      ]
+    }
+  ]
+}

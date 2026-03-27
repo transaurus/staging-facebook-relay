@@ -1,0 +1,81 @@
+==================================== INPUT ====================================
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+// relay:allow_legacy_relay_resolver_tag
+
+/**
+ * @RelayResolver Node.importantField: String
+ * @rootFragment myRootFragment
+ *
+ * The user's favorite page! They probably clicked something in the UI
+ * to tell us that it was their favorite page and then we put that in a
+ * database or something. Then we got that info out again and put it out
+ * again. Anyway, I'm rambling now. Its a page that the user likes. A lot.
+ */
+ graphql`
+ fragment myRootFragment on Node {
+    ... on User {
+      actorCount
+      birthDate
+    }
+    
+    ... on Comment {
+      body
+      birthdate
+    }
+
+    ... on Feedback {
+      body
+      message
+    }
+ }
+`
+==================================== OUTPUT ===================================
+extend interface Node {
+  importantField: String @relay_resolver(has_output_type: true, import_name: "importantField", import_path: "/path/to/test/fixture/terse-relay-resolver-interface.js", fragment_name: "myRootFragment") @resolver_source_hash(value: "27c88753c4af8233f1e6e0c276cb42e9")
+}
+
+
+extend type Bicycle {
+  importantField: String @relay_resolver(has_output_type: true, import_name: "importantField", import_path: "/path/to/test/fixture/terse-relay-resolver-interface.js", fragment_name: "myRootFragment") @resolver_source_hash(value: "27c88753c4af8233f1e6e0c276cb42e9")
+}
+
+
+extend type Comment {
+  importantField: String @relay_resolver(has_output_type: true, import_name: "importantField", import_path: "/path/to/test/fixture/terse-relay-resolver-interface.js", fragment_name: "myRootFragment") @resolver_source_hash(value: "27c88753c4af8233f1e6e0c276cb42e9")
+}
+
+
+extend type Feedback {
+  importantField: String @relay_resolver(has_output_type: true, import_name: "importantField", import_path: "/path/to/test/fixture/terse-relay-resolver-interface.js", fragment_name: "myRootFragment") @resolver_source_hash(value: "27c88753c4af8233f1e6e0c276cb42e9")
+}
+
+
+extend type Page {
+  importantField: String @relay_resolver(has_output_type: true, import_name: "importantField", import_path: "/path/to/test/fixture/terse-relay-resolver-interface.js", fragment_name: "myRootFragment") @resolver_source_hash(value: "27c88753c4af8233f1e6e0c276cb42e9")
+}
+
+
+extend type PhotoStory {
+  importantField: String @relay_resolver(has_output_type: true, import_name: "importantField", import_path: "/path/to/test/fixture/terse-relay-resolver-interface.js", fragment_name: "myRootFragment") @resolver_source_hash(value: "27c88753c4af8233f1e6e0c276cb42e9")
+}
+
+
+extend type Story {
+  importantField: String @relay_resolver(has_output_type: true, import_name: "importantField", import_path: "/path/to/test/fixture/terse-relay-resolver-interface.js", fragment_name: "myRootFragment") @resolver_source_hash(value: "27c88753c4af8233f1e6e0c276cb42e9")
+}
+
+
+extend type User {
+  importantField: String @relay_resolver(has_output_type: true, import_name: "importantField", import_path: "/path/to/test/fixture/terse-relay-resolver-interface.js", fragment_name: "myRootFragment") @resolver_source_hash(value: "27c88753c4af8233f1e6e0c276cb42e9")
+}
+
+
+extend type FetchableType {
+  importantField: String @relay_resolver(has_output_type: true, import_name: "importantField", import_path: "/path/to/test/fixture/terse-relay-resolver-interface.js", fragment_name: "myRootFragment") @resolver_source_hash(value: "27c88753c4af8233f1e6e0c276cb42e9")
+}

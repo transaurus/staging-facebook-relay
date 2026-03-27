@@ -1,0 +1,127 @@
+==================================== INPUT ====================================
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+// relay:allow_legacy_relay_resolver_tag
+
+/**
+ * @RelayResolver User.greeting(salutation: String!): RelayResolverValue
+ * @rootFragment myRootFragment
+ *
+ */
+
+graphql`
+  fragment myRootFragment on User {
+    name
+  }
+`
+==================================== OUTPUT ===================================
+Field(
+    TerseRelayResolver(
+        TerseRelayResolverIr {
+            field: FieldDefinition {
+                name: Identifier {
+                    span: 25:33,
+                    token: Token {
+                        span: 25:33,
+                        kind: Identifier,
+                    },
+                    value: "greeting",
+                },
+                type_: Named(
+                    NamedTypeAnnotation {
+                        name: Identifier {
+                            span: 56:74,
+                            token: Token {
+                                span: 56:74,
+                                kind: Identifier,
+                            },
+                            value: "RelayResolverValue",
+                        },
+                    },
+                ),
+                arguments: Some(
+                    List {
+                        span: 33:54,
+                        start: Token {
+                            span: 33:34,
+                            kind: OpenParen,
+                        },
+                        items: [
+                            InputValueDefinition {
+                                name: Identifier {
+                                    span: 34:44,
+                                    token: Token {
+                                        span: 34:44,
+                                        kind: Identifier,
+                                    },
+                                    value: "salutation",
+                                },
+                                type_: NonNull(
+                                    NonNullTypeAnnotation {
+                                        span: 46:53,
+                                        type_: Named(
+                                            NamedTypeAnnotation {
+                                                name: Identifier {
+                                                    span: 46:52,
+                                                    token: Token {
+                                                        span: 46:52,
+                                                        kind: Identifier,
+                                                    },
+                                                    value: "String",
+                                                },
+                                            },
+                                        ),
+                                        exclamation: Token {
+                                            span: 52:53,
+                                            kind: Exclamation,
+                                        },
+                                    },
+                                ),
+                                default_value: None,
+                                directives: [],
+                                description: None,
+                                span: 34:53,
+                            },
+                        ],
+                        end: Token {
+                            span: 53:54,
+                            kind: CloseParen,
+                        },
+                    },
+                ),
+                directives: [],
+                description: None,
+                hack_source: None,
+                span: 25:74,
+            },
+            type_: WithLocation {
+                location: /path/to/test/fixture/relay-resolver-with-field-args.js:20:24,
+                item: "User",
+            },
+            root_fragment: Some(
+                WithLocation {
+                    location: /path/to/test/fixture/relay-resolver-with-field-args.js:92:106,
+                    item: FragmentDefinitionName(
+                        "myRootFragment",
+                    ),
+                },
+            ),
+            return_fragment: None,
+            deprecated: None,
+            semantic_non_null: None,
+            live: None,
+            location: /path/to/test/fixture/relay-resolver-with-field-args.js:0:110,
+            fragment_arguments: None,
+            source_hash: ResolverSourceHash(
+                "ea04e58b6b18feb9c61322cab7dab228",
+            ),
+            type_confirmed: false,
+            property_lookup_name: None,
+        },
+    ),
+)

@@ -1,0 +1,24 @@
+==================================== INPUT ====================================
+fragment NonNullFragment on User {
+  firstName
+  screennames {
+    name
+    service @required(action: LOG)
+  }
+}
+==================================== OUTPUT ===================================
+import type { FragmentType } from "relay-runtime";
+declare export opaque type NonNullFragment$fragmentType: FragmentType;
+export type NonNullFragment$data = {|
+  +firstName: ?string,
+  +screennames: ?ReadonlyArray<?{|
+    +name: ?string,
+    +service: string,
+  |}>,
+  +$fragmentType: NonNullFragment$fragmentType,
+|};
+export type NonNullFragment$key = {
+  +$data?: NonNullFragment$data,
+  +$fragmentSpreads: NonNullFragment$fragmentType,
+  ...
+};

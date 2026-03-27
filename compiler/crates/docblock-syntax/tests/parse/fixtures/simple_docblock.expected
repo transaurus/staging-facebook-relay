@@ -1,0 +1,19 @@
+==================================== INPUT ====================================
+/**
+ * Hello World
+ */
+==================================== OUTPUT ===================================
+DocblockAST {
+    location: simple_docblock.ecmascript:0:17,
+    sections: [
+        FreeText(
+            WithLocation {
+                location: simple_docblock.ecmascript:5:16,
+                item: "Hello World",
+            },
+        ),
+    ],
+    source_hash: ResolverSourceHash(
+        "39bf0ba989cb8ca55688669aa89f1f43",
+    ),
+}

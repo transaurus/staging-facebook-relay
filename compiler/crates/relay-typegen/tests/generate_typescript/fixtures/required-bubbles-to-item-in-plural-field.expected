@@ -1,0 +1,22 @@
+==================================== INPUT ====================================
+fragment NonNullFragment on User {
+  firstName
+  screennames {
+    name
+    service @required(action: LOG)
+  }
+}
+==================================== OUTPUT ===================================
+import { FragmentRefs } from "relay-runtime";
+export type NonNullFragment$data = {
+  readonly firstName: string | null | undefined;
+  readonly screennames: ReadonlyArray<{
+    readonly name: string | null | undefined;
+    readonly service: string;
+  } | null | undefined> | null | undefined;
+  readonly " $fragmentType": "NonNullFragment";
+};
+export type NonNullFragment$key = {
+  readonly " $data"?: NonNullFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"NonNullFragment">;
+};

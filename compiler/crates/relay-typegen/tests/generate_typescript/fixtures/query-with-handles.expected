@@ -1,0 +1,70 @@
+==================================== INPUT ====================================
+query LinkedHandleField($id: ID!) @raw_response_type {
+  node(id: $id) {
+    ... on User {
+      friends(first: 10) @__clientField(handle: "clientFriends") {
+        count
+      }
+    }
+  }
+}
+
+query ScalarHandleField($id: ID!) @raw_response_type {
+  node(id: $id) {
+    ... on User {
+      name @__clientField(handle: "clientName")
+    }
+  }
+}
+==================================== OUTPUT ===================================
+export type LinkedHandleField$variables = {
+  id: string;
+};
+export type LinkedHandleField$data = {
+  readonly node: {
+    readonly friends?: {
+      readonly count: number | null | undefined;
+    } | null | undefined;
+  } | null | undefined;
+};
+export type LinkedHandleField$rawResponse = {
+  readonly node: {
+    readonly __typename: "User";
+    readonly friends: {
+      readonly count: number | null | undefined;
+    } | null | undefined;
+    readonly id: string;
+  } | {
+    readonly __typename: string;
+    readonly id: string;
+  } | null | undefined;
+};
+export type LinkedHandleField = {
+  rawResponse: LinkedHandleField$rawResponse;
+  response: LinkedHandleField$data;
+  variables: LinkedHandleField$variables;
+};
+-------------------------------------------------------------------------------
+export type ScalarHandleField$variables = {
+  id: string;
+};
+export type ScalarHandleField$data = {
+  readonly node: {
+    readonly name?: string | null | undefined;
+  } | null | undefined;
+};
+export type ScalarHandleField$rawResponse = {
+  readonly node: {
+    readonly __typename: "User";
+    readonly id: string;
+    readonly name: string | null | undefined;
+  } | {
+    readonly __typename: string;
+    readonly id: string;
+  } | null | undefined;
+};
+export type ScalarHandleField = {
+  rawResponse: ScalarHandleField$rawResponse;
+  response: ScalarHandleField$data;
+  variables: ScalarHandleField$variables;
+};

@@ -1,0 +1,67 @@
+==================================== INPUT ====================================
+query TestDefer @raw_response_type {
+  node(id: "1") {
+    ... on User {
+      name
+      friends(first: 10)
+        @stream_connection(key: "TestDefer_friends", initial_count: 0) {
+        edges {
+          node {
+            actor {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}
+==================================== OUTPUT ===================================
+export type TestDefer$variables = {||};
+export type TestDefer$data = {|
+  +node: ?{|
+    +friends?: ?{|
+      +edges: ?ReadonlyArray<?{|
+        +node: ?{|
+          +actor: ?{|
+            +name: ?string,
+          |},
+        |},
+      |}>,
+    |},
+    +name?: ?string,
+  |},
+|};
+export type TestDefer$rawResponse = {|
+  +node: ?({|
+    +__typename: "User",
+    +friends: ?{|
+      +edges: ?ReadonlyArray<?{|
+        +cursor: ?string,
+        +node: ?{|
+          +__typename: "User",
+          +actor: ?{|
+            +__typename: string,
+            +id: string,
+            +name: ?string,
+          |},
+          +id: string,
+        |},
+      |}>,
+      +pageInfo: ?{|
+        +endCursor: ?string,
+        +hasNextPage: ?CustomBoolean,
+      |},
+    |},
+    +id: string,
+    +name: ?string,
+  |} | {|
+    +__typename: string,
+    +id: string,
+  |}),
+|};
+export type TestDefer = {|
+  rawResponse: TestDefer$rawResponse,
+  response: TestDefer$data,
+  variables: TestDefer$variables,
+|};

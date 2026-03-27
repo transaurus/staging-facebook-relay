@@ -1,0 +1,14 @@
+==================================== INPUT ====================================
+mutation MutationWithValidNameMutation {
+    commentCreate(input: null) {
+        __typename
+    }
+}
+
+mutation MutationWithValidNameSecondMutation {
+    commentCreate(input: null) {
+        __typename
+    }
+}
+==================================== OUTPUT ===================================
+OK

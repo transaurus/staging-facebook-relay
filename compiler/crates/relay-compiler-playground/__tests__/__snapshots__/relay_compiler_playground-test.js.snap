@@ -1,0 +1,224 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Ok parse_to_normalization_ast 1`] = `
+"{
+  \\"argumentDefinitions\\": [],
+  \\"kind\\": \\"Operation\\",
+  \\"name\\": \\"MyQuery\\",
+  \\"selections\\": [
+    {
+      \\"alias\\": null,
+      \\"args\\": null,
+      \\"concreteType\\": \\"User\\",
+      \\"kind\\": \\"LinkedField\\",
+      \\"name\\": \\"me\\",
+      \\"plural\\": false,
+      \\"selections\\": [
+        {
+          \\"alias\\": null,
+          \\"args\\": null,
+          \\"kind\\": \\"ScalarField\\",
+          \\"name\\": \\"name\\",
+          \\"storageKey\\": null
+        },
+        {
+          \\"alias\\": null,
+          \\"args\\": null,
+          \\"kind\\": \\"ScalarField\\",
+          \\"name\\": \\"age\\",
+          \\"storageKey\\": null
+        },
+        {
+          \\"alias\\": null,
+          \\"args\\": null,
+          \\"concreteType\\": \\"User\\",
+          \\"kind\\": \\"LinkedField\\",
+          \\"name\\": \\"best_friend\\",
+          \\"plural\\": false,
+          \\"selections\\": [
+            {
+              \\"alias\\": null,
+              \\"args\\": null,
+              \\"kind\\": \\"ScalarField\\",
+              \\"name\\": \\"age\\",
+              \\"storageKey\\": null
+            }
+          ],
+          \\"storageKey\\": null
+        }
+      ],
+      \\"storageKey\\": null
+    }
+  ]
+}"
+`;
+
+exports[`Ok parse_to_reader_ast @required 1`] = `
+"{
+  \\"argumentDefinitions\\": [],
+  \\"kind\\": \\"Fragment\\",
+  \\"metadata\\": null,
+  \\"name\\": \\"AgeFragment\\",
+  \\"selections\\": [
+    {
+      \\"kind\\": \\"RequiredField\\",
+      \\"field\\": {
+        \\"alias\\": null,
+        \\"args\\": null,
+        \\"kind\\": \\"ScalarField\\",
+        \\"name\\": \\"age\\",
+        \\"storageKey\\": null
+      },
+      \\"action\\": \\"LOG\\",
+      \\"path\\": \\"age\\"
+    }
+  ],
+  \\"type\\": \\"User\\",
+  \\"abstractKey\\": null
+}"
+`;
+
+exports[`Ok parse_to_reader_ast 1`] = `
+"{
+  \\"argumentDefinitions\\": [],
+  \\"kind\\": \\"Fragment\\",
+  \\"metadata\\": null,
+  \\"name\\": \\"AgeFragment\\",
+  \\"selections\\": [
+    {
+      \\"alias\\": null,
+      \\"args\\": null,
+      \\"kind\\": \\"ScalarField\\",
+      \\"name\\": \\"age\\",
+      \\"storageKey\\": null
+    }
+  ],
+  \\"type\\": \\"User\\",
+  \\"abstractKey\\": null
+}
+
+{
+  \\"argumentDefinitions\\": [],
+  \\"kind\\": \\"Operation\\",
+  \\"name\\": \\"MyQuery\\",
+  \\"selections\\": [
+    {
+      \\"alias\\": null,
+      \\"args\\": null,
+      \\"concreteType\\": \\"User\\",
+      \\"kind\\": \\"LinkedField\\",
+      \\"name\\": \\"me\\",
+      \\"plural\\": false,
+      \\"selections\\": [
+        {
+          \\"alias\\": null,
+          \\"args\\": null,
+          \\"kind\\": \\"ScalarField\\",
+          \\"name\\": \\"name\\",
+          \\"storageKey\\": null
+        },
+        {
+          \\"args\\": null,
+          \\"kind\\": \\"FragmentSpread\\",
+          \\"name\\": \\"AgeFragment\\"
+        },
+        {
+          \\"alias\\": null,
+          \\"args\\": null,
+          \\"concreteType\\": \\"User\\",
+          \\"kind\\": \\"LinkedField\\",
+          \\"name\\": \\"best_friend\\",
+          \\"plural\\": false,
+          \\"selections\\": [
+            {
+              \\"args\\": null,
+              \\"kind\\": \\"FragmentSpread\\",
+              \\"name\\": \\"AgeFragment\\"
+            }
+          ],
+          \\"storageKey\\": null
+        }
+      ],
+      \\"storageKey\\": null
+    }
+  ]
+}"
+`;
+
+exports[`Ok transform 1`] = `
+"query MyQuery {
+  me {
+    name
+    ...AgeFragment
+    best_friend {
+      ...AgeFragment
+    }
+  }
+}
+
+fragment AgeFragment on User {
+  age
+}"
+`;
+
+exports[`Ok types (flow) 1`] = `
+"import type { FragmentType } from \\"relay-runtime\\";
+declare export opaque type AgeFragment$fragmentType: FragmentType;
+export type AgeFragment$data = {|
+  +age: ?number,
+  +$fragmentType: AgeFragment$fragmentType,
+|};
+export type AgeFragment$key = {
+  +$data?: AgeFragment$data,
+  +$fragmentSpreads: AgeFragment$fragmentType,
+  ...
+};
+
+
+type AgeFragment$fragmentType = any;
+export type MyQuery$variables = {||};
+export type MyQuery$data = {|
+  +me: ?{|
+    +best_friend: ?{|
+      +$fragmentSpreads: AgeFragment$fragmentType,
+    |},
+    +name: ?string,
+    +$fragmentSpreads: AgeFragment$fragmentType,
+  |},
+|};
+export type MyQuery = {|
+  response: MyQuery$data,
+  variables: MyQuery$variables,
+|};
+"
+`;
+
+exports[`Ok types (typescript) 1`] = `
+"import { FragmentRefs } from \\"relay-runtime\\";
+export type AgeFragment$data = {
+  readonly age: number | null;
+  readonly \\" $fragmentType\\": \\"AgeFragment\\";
+};
+export type AgeFragment$key = {
+  readonly \\" $data\\"?: AgeFragment$data;
+  readonly \\" $fragmentSpreads\\": FragmentRefs<\\"AgeFragment\\">;
+};
+
+
+import { FragmentRefs } from \\"relay-runtime\\";
+export type MyQuery$variables = {};
+export type MyQuery$data = {
+  readonly me: {
+    readonly best_friend: {
+      readonly \\" $fragmentSpreads\\": FragmentRefs<\\"AgeFragment\\">;
+    } | null;
+    readonly name: string | null;
+    readonly \\" $fragmentSpreads\\": FragmentRefs<\\"AgeFragment\\">;
+  } | null;
+};
+export type MyQuery = {
+  response: MyQuery$data;
+  variables: MyQuery$variables;
+};
+"
+`;

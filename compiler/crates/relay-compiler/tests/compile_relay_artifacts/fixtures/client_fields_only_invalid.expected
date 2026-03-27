@@ -1,0 +1,111 @@
+==================================== INPUT ====================================
+query clientFieldsOnlyInvalidQuery {
+  defaultSettings {
+    ...clientFieldsOnlyInvalidFragment
+  }
+}
+
+fragment clientFieldsOnlyInvalidFragment on Settings {
+  client_field
+}
+
+# %extensions%
+
+extend type Settings {
+  client_field: String
+}
+==================================== OUTPUT ===================================
+{
+  "fragment": {
+    "argumentDefinitions": [],
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "clientFieldsOnlyInvalidQuery",
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Settings",
+        "kind": "LinkedField",
+        "name": "defaultSettings",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "clientFieldsOnlyInvalidFragment"
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "type": "Query",
+    "abstractKey": null
+  },
+  "kind": "Request",
+  "operation": {
+    "argumentDefinitions": [],
+    "kind": "Operation",
+    "name": "clientFieldsOnlyInvalidQuery",
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Settings",
+        "kind": "LinkedField",
+        "name": "defaultSettings",
+        "plural": false,
+        "selections": [
+          {
+            "kind": "ClientExtension",
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "client_field",
+                "storageKey": null
+              }
+            ]
+          }
+        ],
+        "storageKey": null
+      }
+    ]
+  },
+  "params": {
+    "cacheID": "0596673d6a1e987efce7b7b3e80d12fc",
+    "id": null,
+    "metadata": {},
+    "name": "clientFieldsOnlyInvalidQuery",
+    "operationKind": "query",
+    "text": null
+  }
+}
+
+QUERY:
+
+Query Text is Empty.
+
+{
+  "argumentDefinitions": [],
+  "kind": "Fragment",
+  "metadata": null,
+  "name": "clientFieldsOnlyInvalidFragment",
+  "selections": [
+    {
+      "kind": "ClientExtension",
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "client_field",
+          "storageKey": null
+        }
+      ]
+    }
+  ],
+  "type": "Settings",
+  "abstractKey": null
+}

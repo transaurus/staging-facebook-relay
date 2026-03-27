@@ -1,0 +1,9 @@
+==================================== INPUT ====================================
+# expected-to-throw
+fragment UserFragment on User {
+  checkins(environments: "WEB") {
+    __typename
+  }
+}
+==================================== ERROR ====================================
+Diagnostic(DiagnosticData { message: ExpectedEnumValueGotString("Environment"), message_type_name: "graphql_ir::errors::ValidationMessage", location: string-enum-arg.invalid.graphql:77:82, related_information: [], tags: [], severity: Error, data: [], machine_readable: {} })

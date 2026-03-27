@@ -1,0 +1,158 @@
+==================================== INPUT ====================================
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+// relay:allow_legacy_relay_resolver_tag
+
+/**
+ * @RelayResolver User.favorite_page: RelayResolverValue
+ * @rootFragment myRootFragment
+ *
+ * The user's favorite page! They probably clicked something in the UI
+ * to tell us that it was their favorite page and then we put that in a
+ * database or something. Then we got that info out again and put it out
+ * again. Anyway, I'm rambling now. Its a page that the user likes. A lot.
+ */
+
+graphql`
+  fragment myRootFragment on User @argumentDefinitions(first: {type: "Int", defaultValue: 10}, userID: {type: "ID!"}) {
+    id
+  }
+`
+==================================== OUTPUT ===================================
+Field(
+    TerseRelayResolver(
+        TerseRelayResolverIr {
+            field: FieldDefinition {
+                name: Identifier {
+                    span: 25:38,
+                    token: Token {
+                        span: 25:38,
+                        kind: Identifier,
+                    },
+                    value: "favorite_page",
+                },
+                type_: Named(
+                    NamedTypeAnnotation {
+                        name: Identifier {
+                            span: 40:58,
+                            token: Token {
+                                span: 40:58,
+                                kind: Identifier,
+                            },
+                            value: "RelayResolverValue",
+                        },
+                    },
+                ),
+                arguments: None,
+                directives: [],
+                description: Some(
+                    StringNode {
+                        token: Token {
+                            span: 93:384,
+                            kind: Empty,
+                        },
+                        value: "\nThe user's favorite page! They probably clicked something in the UI\nto tell us that it was their favorite page and then we put that in a\ndatabase or something. Then we got that info out again and put it out\nagain. Anyway, I'm rambling now. Its a page that the user likes. A lot.",
+                    },
+                ),
+                hack_source: None,
+                span: 25:58,
+            },
+            type_: WithLocation {
+                location: /path/to/test/fixture/relay-resolver-with-args.js:20:24,
+                item: "User",
+            },
+            root_fragment: Some(
+                WithLocation {
+                    location: /path/to/test/fixture/relay-resolver-with-args.js:76:90,
+                    item: FragmentDefinitionName(
+                        "myRootFragment",
+                    ),
+                },
+            ),
+            return_fragment: None,
+            deprecated: None,
+            semantic_non_null: None,
+            live: None,
+            location: /path/to/test/fixture/relay-resolver-with-args.js:0:385,
+            fragment_arguments: Some(
+                [
+                    Argument {
+                        name: Identifier {
+                            span: 56:61,
+                            token: Token {
+                                span: 56:61,
+                                kind: Identifier,
+                            },
+                            value: "first",
+                        },
+                        type_: Named(
+                            NamedTypeAnnotation {
+                                name: Identifier {
+                                    span: 0:3,
+                                    token: Token {
+                                        span: 0:3,
+                                        kind: Identifier,
+                                    },
+                                    value: "Int",
+                                },
+                            },
+                        ),
+                        default_value: Some(
+                            Int(
+                                IntNode {
+                                    token: Token {
+                                        span: 91:93,
+                                        kind: IntegerLiteral,
+                                    },
+                                    value: 10,
+                                },
+                            ),
+                        ),
+                    },
+                    Argument {
+                        name: Identifier {
+                            span: 96:102,
+                            token: Token {
+                                span: 96:102,
+                                kind: Identifier,
+                            },
+                            value: "userID",
+                        },
+                        type_: NonNull(
+                            NonNullTypeAnnotation {
+                                span: 0:3,
+                                type_: Named(
+                                    NamedTypeAnnotation {
+                                        name: Identifier {
+                                            span: 0:2,
+                                            token: Token {
+                                                span: 0:2,
+                                                kind: Identifier,
+                                            },
+                                            value: "ID",
+                                        },
+                                    },
+                                ),
+                                exclamation: Token {
+                                    span: 2:3,
+                                    kind: Exclamation,
+                                },
+                            },
+                        ),
+                        default_value: None,
+                    },
+                ],
+            ),
+            source_hash: ResolverSourceHash(
+                "2ac6804aa7353fa776266120ca62e01a",
+            ),
+            type_confirmed: false,
+            property_lookup_name: None,
+        },
+    ),
+)

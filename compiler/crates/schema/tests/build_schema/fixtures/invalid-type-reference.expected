@@ -1,0 +1,14 @@
+==================================== INPUT ====================================
+# expected-to-throw
+
+type User {
+  emails: [Email!]!
+}
+==================================== ERROR ====================================
+✖︎ Reference to undefined type 'Email'.
+
+  invalid-type-reference.graphql:4:12
+    3 │ type User {
+    4 │   emails: [Email!]!
+      │            ^^^^^
+    5 │ }

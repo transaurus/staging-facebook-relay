@@ -1,0 +1,64 @@
+==================================== INPUT ====================================
+fragment NameRendererFragment on User {
+  id
+  nameRenderer @match {
+    ...PlainUserNameRenderer_name @module(name: "PlainUserNameRenderer.react")
+    ...MarkdownUserNameRenderer_name
+      @module(name: "MarkdownUserNameRenderer.react")
+  }
+}
+
+fragment PlainUserNameRenderer_name on PlainUserNameRenderer {
+  plaintext
+  data {
+    text
+  }
+}
+
+fragment MarkdownUserNameRenderer_name on MarkdownUserNameRenderer {
+  markdown
+  data {
+    markup
+  }
+}
+==================================== OUTPUT ===================================
+import { FragmentRefs } from "relay-runtime";
+export type MarkdownUserNameRenderer_name$data = {
+  readonly data: {
+    readonly markup: string | null | undefined;
+  } | null | undefined;
+  readonly markdown: string | null | undefined;
+  readonly " $fragmentType": "MarkdownUserNameRenderer_name";
+};
+export type MarkdownUserNameRenderer_name$key = {
+  readonly " $data"?: MarkdownUserNameRenderer_name$data;
+  readonly " $fragmentSpreads": FragmentRefs<"MarkdownUserNameRenderer_name">;
+};
+-------------------------------------------------------------------------------
+import { FragmentRefs } from "relay-runtime";
+export type NameRendererFragment$data = {
+  readonly id: string;
+  readonly nameRenderer: {
+    readonly __fragmentPropName?: string | null | undefined;
+    readonly __module_component?: string | null | undefined;
+    readonly " $fragmentSpreads": FragmentRefs<"MarkdownUserNameRenderer_name" | "PlainUserNameRenderer_name">;
+  } | null | undefined;
+  readonly " $fragmentType": "NameRendererFragment";
+};
+export type NameRendererFragment$key = {
+  readonly " $data"?: NameRendererFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"NameRendererFragment">;
+};
+-------------------------------------------------------------------------------
+import { FragmentRefs } from "relay-runtime";
+export type PlainUserNameRenderer_name$data = {
+  readonly data: {
+    readonly text: string | null | undefined;
+  } | null | undefined;
+  readonly plaintext: string | null | undefined;
+  readonly " $fragmentType": "PlainUserNameRenderer_name";
+};
+export type PlainUserNameRenderer_name$key = {
+  readonly " $data"?: PlainUserNameRenderer_name$data;
+  readonly " $fragmentSpreads": FragmentRefs<"PlainUserNameRenderer_name">;
+};

@@ -1,0 +1,30 @@
+==================================== INPUT ====================================
+fragment ConditionField on Node {
+  id @include(if: $condition)
+}
+
+fragment NestedCondition on Node {
+  ... @include(if: $condition) {
+    id
+  }
+}
+==================================== OUTPUT ===================================
+import { FragmentRefs } from "relay-runtime";
+export type ConditionField$data = {
+  readonly id?: string;
+  readonly " $fragmentType": "ConditionField";
+};
+export type ConditionField$key = {
+  readonly " $data"?: ConditionField$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ConditionField">;
+};
+-------------------------------------------------------------------------------
+import { FragmentRefs } from "relay-runtime";
+export type NestedCondition$data = {
+  readonly id?: string;
+  readonly " $fragmentType": "NestedCondition";
+};
+export type NestedCondition$key = {
+  readonly " $data"?: NestedCondition$data;
+  readonly " $fragmentSpreads": FragmentRefs<"NestedCondition">;
+};

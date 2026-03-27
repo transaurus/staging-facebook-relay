@@ -1,0 +1,9 @@
+query defaultArgumentOnFieldTestQuery {
+  node {
+    hometown {
+      a: nameWithDefaultArgs
+      b: nameWithDefaultArgs(capitalize: true)
+      c: nameWithRequiredDefaultArgs
+    }
+  }
+}

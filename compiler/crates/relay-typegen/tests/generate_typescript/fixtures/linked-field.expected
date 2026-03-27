@@ -1,0 +1,67 @@
+==================================== INPUT ====================================
+fragment LinkedField on User {
+  profilePicture {
+    uri
+    width
+    height
+  }
+  hometown {
+    # object
+    id
+    profilePicture {
+      uri
+    }
+  }
+  actor {
+    # interface
+    id
+  }
+}
+
+query UnionTypeTest {
+  neverNode {
+    __typename
+    ... on FakeNode {
+      id
+    }
+  }
+}
+==================================== OUTPUT ===================================
+export type UnionTypeTest$variables = Record<PropertyKey, never>;
+export type UnionTypeTest$data = {
+  readonly neverNode: {
+    readonly __typename: "FakeNode";
+    readonly id: string;
+  } | {
+    // This will never be '%other', but we need some
+    // value in case none of the concrete values match.
+    readonly __typename: "%other";
+  } | null | undefined;
+};
+export type UnionTypeTest = {
+  response: UnionTypeTest$data;
+  variables: UnionTypeTest$variables;
+};
+-------------------------------------------------------------------------------
+import { FragmentRefs } from "relay-runtime";
+export type LinkedField$data = {
+  readonly actor: {
+    readonly id: string;
+  } | null | undefined;
+  readonly hometown: {
+    readonly id: string;
+    readonly profilePicture: {
+      readonly uri: string | null | undefined;
+    } | null | undefined;
+  } | null | undefined;
+  readonly profilePicture: {
+    readonly height: number | null | undefined;
+    readonly uri: string | null | undefined;
+    readonly width: number | null | undefined;
+  } | null | undefined;
+  readonly " $fragmentType": "LinkedField";
+};
+export type LinkedField$key = {
+  readonly " $data"?: LinkedField$data;
+  readonly " $fragmentSpreads": FragmentRefs<"LinkedField">;
+};

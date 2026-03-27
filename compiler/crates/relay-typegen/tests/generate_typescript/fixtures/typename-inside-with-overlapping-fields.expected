@@ -1,0 +1,42 @@
+==================================== INPUT ====================================
+fragment TypenameInsideWithOverlappingFields on Viewer {
+  actor {
+    __typename
+    ... on Page {
+      id
+      name
+    }
+    ... on User {
+      id
+      name
+      profile_picture {
+        uri
+      }
+    }
+  }
+}
+==================================== OUTPUT ===================================
+import { FragmentRefs } from "relay-runtime";
+export type TypenameInsideWithOverlappingFields$data = {
+  readonly actor: {
+    readonly __typename: "Page";
+    readonly id: string;
+    readonly name: string | null | undefined;
+  } | {
+    readonly __typename: "User";
+    readonly id: string;
+    readonly name: string | null | undefined;
+    readonly profile_picture: {
+      readonly uri: string | null | undefined;
+    } | null | undefined;
+  } | {
+    // This will never be '%other', but we need some
+    // value in case none of the concrete values match.
+    readonly __typename: "%other";
+  } | null | undefined;
+  readonly " $fragmentType": "TypenameInsideWithOverlappingFields";
+};
+export type TypenameInsideWithOverlappingFields$key = {
+  readonly " $data"?: TypenameInsideWithOverlappingFields$data;
+  readonly " $fragmentSpreads": FragmentRefs<"TypenameInsideWithOverlappingFields">;
+};

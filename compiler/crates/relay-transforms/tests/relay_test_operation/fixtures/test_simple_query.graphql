@@ -1,0 +1,9 @@
+query SimpleQuery @relay_test_operation {
+  node(id: "test-id") {
+    id
+    ... on User {
+      name
+    }
+  }
+}
+# %extensions%

@@ -1,0 +1,714 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ * @format
+ * @oncall relay
+ */
+
+'use strict';
+import type {NormalizationRootNode} from '../../util/NormalizationNode';
+import type {Snapshot} from '../RelayStoreTypes';
+import type {
+  HandleFieldPayload,
+  RecordSourceProxy,
+} from 'relay-runtime/store/RelayStoreTypes';
+import type {RequestParameters} from 'relay-runtime/util/RelayConcreteNode';
+import type {
+  CacheConfig,
+  Variables,
+} from 'relay-runtime/util/RelayRuntimeTypes';
+
+const RelayNetwork = require('../../network/RelayNetwork');
+const RelayObservable = require('../../network/RelayObservable');
+const {graphql} = require('../../query/GraphQLTag');
+const RelayModernEnvironment = require('../RelayModernEnvironment');
+const {
+  createOperationDescriptor,
+} = require('../RelayModernOperationDescriptor');
+const {getSingularSelector} = require('../RelayModernSelector');
+const RelayModernStore = require('../RelayModernStore');
+const RelayRecordSource = require('../RelayRecordSource');
+const nullthrows = require('nullthrows');
+const {
+  cannotReadPropertyOfUndefined__DEPRECATED,
+  disallowWarnings,
+  injectPromisePolyfill__DEPRECATED,
+} = require('relay-test-utils-internal');
+
+injectPromisePolyfill__DEPRECATED();
+disallowWarnings();
+
+describe('execute() a query with nested @match', () => {
+  let callbacks: {
+    +complete: JestMockFn<ReadonlyArray<unknown>, unknown>,
+    +error: JestMockFn<ReadonlyArray<Error>, unknown>,
+    +next: JestMockFn<ReadonlyArray<unknown>, unknown>,
+    +start?: JestMockFn<ReadonlyArray<unknown>, unknown>,
+    +unsubscribe?: JestMockFn<ReadonlyArray<unknown>, unknown>,
+  };
+  let complete;
+  let dataSource;
+  let environment;
+  let error;
+  let fetch;
+  let markdownRendererFragment;
+  let markdownRendererNormalizationFragment;
+  let next;
+  let operation;
+  let operationCallback;
+  let operationLoader: {
+    get: (reference: unknown) => ?NormalizationRootNode,
+    load: JestMockFn<ReadonlyArray<unknown>, Promise<?NormalizationRootNode>>,
+  };
+  let plaintextRendererFragment;
+  let plaintextRendererNormalizationFragment;
+  let query;
+  let resolveFragment;
+  let source;
+  let store;
+  let variables;
+
+  beforeEach(() => {
+    markdownRendererNormalizationFragment = require('./__generated__/RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql');
+    plaintextRendererNormalizationFragment = require('./__generated__/RelayModernEnvironmentExecuteWithNestedMatchTestPlainUserNameRenderer_name$normalization.graphql');
+
+    query = graphql`
+      query RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery(
+        $id: ID!
+      ) {
+        node(id: $id) {
+          ... on User {
+            outerRenderer: nameRenderer @match {
+              ...RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name
+                @module(name: "MarkdownUserNameRenderer.react")
+            }
+          }
+        }
+      }
+    `;
+
+    markdownRendererFragment = graphql`
+      fragment RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name on MarkdownUserNameRenderer {
+        __typename
+        markdown
+        data {
+          markup @__clientField(handle: "markup_handler")
+        }
+        user {
+          innerRenderer: nameRenderer @match {
+            ...RelayModernEnvironmentExecuteWithNestedMatchTestPlainUserNameRenderer_name
+              @module(name: "PlainUserNameRenderer.react")
+          }
+        }
+      }
+    `;
+
+    plaintextRendererFragment = graphql`
+      fragment RelayModernEnvironmentExecuteWithNestedMatchTestPlainUserNameRenderer_name on PlainUserNameRenderer {
+        plaintext
+        data {
+          text
+        }
+      }
+    `;
+    variables = {id: '1'};
+    operation = createOperationDescriptor(query, variables);
+
+    const MarkupHandler = {
+      update(storeProxy: RecordSourceProxy, payload: HandleFieldPayload) {
+        const record = storeProxy.get(payload.dataID);
+        if (record != null) {
+          const markup = record.getValue(payload.fieldKey);
+          record.setValue(
+            typeof markup === 'string' ? markup.toUpperCase() : null,
+            payload.handleKey,
+          );
+        }
+      },
+    };
+
+    complete = jest.fn<ReadonlyArray<unknown>, unknown>();
+    error = jest.fn<ReadonlyArray<Error>, unknown>();
+    next = jest.fn<ReadonlyArray<unknown>, unknown>();
+    callbacks = {complete, error, next};
+    fetch = (
+      _query: RequestParameters,
+      _variables: Variables,
+      _cacheConfig: CacheConfig,
+    ) => {
+      // $FlowFixMe[missing-local-annot] Error found while enabling LTI on this file
+      return RelayObservable.create(sink => {
+        dataSource = sink;
+      });
+    };
+    operationLoader = {
+      get: jest.fn(),
+      load: jest.fn(moduleName => {
+        return new Promise(resolve => {
+          resolveFragment = resolve;
+        });
+      }),
+    };
+    source = RelayRecordSource.create();
+    store = new RelayModernStore(source);
+    environment = new RelayModernEnvironment({
+      handlerProvider: name => {
+        switch (name) {
+          case 'markup_handler':
+            return MarkupHandler;
+        }
+      },
+      network: RelayNetwork.create(fetch),
+      operationLoader,
+      store,
+    });
+    const operationSnapshot = environment.lookup(operation.fragment);
+    operationCallback = jest.fn<[Snapshot], void>();
+    environment.subscribe(operationSnapshot, operationCallback);
+  });
+
+  it('calls next() and publishes the initial payload to the store', () => {
+    environment.execute({operation}).subscribe(callbacks);
+    const payload = {
+      data: {
+        node: {
+          __typename: 'User',
+          id: '1',
+          outerRenderer: {
+            __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'MarkdownUserNameRenderer.react',
+            __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql',
+            __typename: 'MarkdownUserNameRenderer',
+            data: {
+              markup: '<markup/>',
+            },
+            markdown: 'markdown payload',
+            user: {
+              id: '2',
+              innerRenderer: {
+                __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'PlainUserNameRenderer.react',
+                __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'RelayModernEnvironmentExecuteWithNestedMatchTestPlainUserNameRenderer_name$normalization.graphql',
+                __typename: 'PlainUserNameRenderer',
+                data: {
+                  text: 'plaintext!',
+                },
+                plaintext: 'plaintext payload',
+              },
+            },
+          },
+        },
+      },
+    };
+    dataSource.next(payload);
+    jest.runAllTimers();
+
+    expect(next.mock.calls.length).toBe(1);
+    expect(complete).not.toBeCalled();
+    expect(error).not.toBeCalled();
+    expect(operationCallback).toBeCalledTimes(1);
+    const operationSnapshot = operationCallback.mock.calls[0][0];
+    expect(operationSnapshot.isMissingData).toBe(false);
+    expect(operationSnapshot.data).toEqual({
+      node: {
+        outerRenderer: {
+          __fragmentOwner: operation.request,
+          __fragmentPropName: 'name',
+          __fragments: {
+            RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+              {},
+          },
+          __id: 'client:1:nameRenderer(supported:"2aTHRe")',
+          __module_component: 'MarkdownUserNameRenderer.react',
+        },
+      },
+    });
+
+    const matchSelector = nullthrows(
+      getSingularSelector(
+        markdownRendererFragment,
+        (operationSnapshot.data?.node as any)?.outerRenderer,
+      ),
+    );
+    const matchSnapshot = environment.lookup(matchSelector);
+    expect(matchSnapshot.isMissingData).toBe(true);
+    expect(matchSnapshot.data).toEqual({
+      __typename: 'MarkdownUserNameRenderer',
+      data: undefined,
+      markdown: undefined,
+      user: undefined,
+    });
+  });
+
+  it('loads the @match fragments and normalizes/publishes payloads', () => {
+    environment.execute({operation}).subscribe(callbacks);
+    const payload = {
+      data: {
+        node: {
+          __typename: 'User',
+          id: '1',
+          outerRenderer: {
+            __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'MarkdownUserNameRenderer.react',
+            __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql',
+            __typename: 'MarkdownUserNameRenderer',
+            data: {
+              id: 'data-1',
+              // NOTE: should be uppercased when normalized (by MarkupHandler)
+              markup: '<markup/>',
+            },
+            markdown: 'markdown payload',
+            user: {
+              id: '2',
+              innerRenderer: {
+                __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'PlainUserNameRenderer.react',
+                __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'RelayModernEnvironmentExecuteWithNestedMatchTestPlainUserNameRenderer_name$normalizationgraphql',
+                __typename: 'PlainUserNameRenderer',
+                data: {
+                  id: 'data-2',
+                  text: 'plaintext!',
+                },
+                plaintext: 'plaintext payload',
+              },
+            },
+          },
+        },
+      },
+    };
+    dataSource.next(payload);
+    jest.runAllTimers();
+    next.mockClear();
+
+    expect(operationLoader.load).toBeCalledTimes(1);
+    expect(operationLoader.load.mock.calls[0][0]).toEqual(
+      'RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql',
+    );
+
+    expect(operationCallback).toBeCalledTimes(1);
+    // initial operation snapshot is tested above
+    const operationSnapshot = operationCallback.mock.calls[0][0];
+    operationCallback.mockClear();
+    const outerMatchSelector = nullthrows(
+      getSingularSelector(
+        markdownRendererFragment,
+        (operationSnapshot.data?.node as any)?.outerRenderer,
+      ),
+    );
+    // initial outer fragment snapshot is tested above
+    const initialOuterMatchSnapshot = environment.lookup(outerMatchSelector);
+    expect(initialOuterMatchSnapshot.isMissingData).toBe(true);
+    const outerMatchCallback = jest.fn<[Snapshot], void>();
+    environment.subscribe(initialOuterMatchSnapshot, outerMatchCallback);
+
+    resolveFragment(markdownRendererNormalizationFragment);
+    jest.runAllTimers();
+    // next() should not be called when @match resolves, no new GraphQLResponse
+    // was received for this case
+    expect(next).toBeCalledTimes(0);
+    expect(operationCallback).toBeCalledTimes(0);
+    expect(outerMatchCallback).toBeCalledTimes(1);
+    const outerMatchSnapshot = outerMatchCallback.mock.calls[0][0];
+    expect(outerMatchSnapshot.isMissingData).toBe(false);
+    expect(outerMatchSnapshot.data).toEqual({
+      __typename: 'MarkdownUserNameRenderer',
+      data: {
+        // NOTE: should be uppercased by the MarkupHandler
+        markup: '<MARKUP/>',
+      },
+      markdown: 'markdown payload',
+      user: {
+        innerRenderer: {
+          __fragmentOwner: operation.request,
+          __fragmentPropName: 'name',
+
+          __fragments: {
+            RelayModernEnvironmentExecuteWithNestedMatchTestPlainUserNameRenderer_name:
+              {},
+          },
+
+          __id: 'client:2:nameRenderer(supported:"1AwQS7")',
+          __module_component: 'PlainUserNameRenderer.react',
+        },
+      },
+    });
+
+    const innerMatchSelector = nullthrows(
+      getSingularSelector(
+        plaintextRendererFragment,
+        (outerMatchSnapshot.data?.user as $FlowFixMe)?.innerRenderer,
+      ),
+    );
+    const initialInnerMatchSnapshot = environment.lookup(innerMatchSelector);
+    expect(initialInnerMatchSnapshot.isMissingData).toBe(true);
+    const innerMatchCallback = jest.fn<[Snapshot], void>();
+    environment.subscribe(initialInnerMatchSnapshot, innerMatchCallback);
+
+    resolveFragment(plaintextRendererNormalizationFragment);
+    jest.runAllTimers();
+
+    expect(innerMatchCallback).toBeCalledTimes(1);
+    const innerMatchSnapshot = innerMatchCallback.mock.calls[0][0];
+    expect(innerMatchSnapshot.isMissingData).toBe(false);
+    expect(innerMatchSnapshot.data).toEqual({
+      data: {
+        text: 'plaintext!',
+      },
+      plaintext: 'plaintext payload',
+    });
+  });
+
+  it('calls complete() if the network completes before processing the match', () => {
+    environment.execute({operation}).subscribe(callbacks);
+    const payload = {
+      data: {
+        node: {
+          __typename: 'User',
+          id: '1',
+          outerRenderer: {
+            __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'MarkdownUserNameRenderer.react',
+            __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql',
+            __typename: 'MarkdownUserNameRenderer',
+            data: {
+              id: 'data-1',
+              // NOTE: should be uppercased when normalized (by MarkupHandler)
+              markup: '<markup/>',
+            },
+            markdown: 'markdown payload',
+            user: {
+              id: '2',
+              innerRenderer: {
+                __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'PlainUserNameRenderer.react',
+                __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'RelayModernEnvironmentExecuteWithNestedMatchTestPlainUserNameRenderer_name$normalization.graphql',
+                __typename: 'PlainUserNameRenderer',
+                data: {
+                  id: 'data-2',
+                  text: 'plaintext!',
+                },
+                plaintext: 'plaintext payload',
+              },
+            },
+          },
+        },
+      },
+    };
+    dataSource.next(payload);
+    jest.runAllTimers();
+    dataSource.complete();
+    expect(callbacks.complete).toBeCalledTimes(0);
+    expect(callbacks.error).toBeCalledTimes(0);
+    expect(callbacks.next).toBeCalledTimes(1);
+
+    expect(operationLoader.load).toBeCalledTimes(1);
+    expect(operationLoader.load.mock.calls[0][0]).toBe(
+      'RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql',
+    );
+    resolveFragment(markdownRendererNormalizationFragment);
+    jest.runAllTimers();
+
+    expect(callbacks.complete).toBeCalledTimes(0);
+    expect(callbacks.error).toBeCalledTimes(0);
+    expect(callbacks.next).toBeCalledTimes(1);
+
+    expect(operationLoader.load).toBeCalledTimes(2);
+    expect(operationLoader.load.mock.calls[1][0]).toBe(
+      'RelayModernEnvironmentExecuteWithNestedMatchTestPlainUserNameRenderer_name$normalization.graphql',
+    );
+    resolveFragment(plaintextRendererNormalizationFragment);
+    jest.runAllTimers();
+
+    expect(callbacks.complete).toBeCalledTimes(1);
+    expect(callbacks.error).toBeCalledTimes(0);
+    expect(callbacks.next).toBeCalledTimes(1);
+  });
+
+  it('calls complete() if the network completes after processing the match', () => {
+    environment.execute({operation}).subscribe(callbacks);
+    const payload = {
+      data: {
+        node: {
+          __typename: 'User',
+          id: '1',
+          outerRenderer: {
+            __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'MarkdownUserNameRenderer.react',
+            __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql',
+            __typename: 'MarkdownUserNameRenderer',
+            data: {
+              id: 'data-1',
+              // NOTE: should be uppercased when normalized (by MarkupHandler)
+              markup: '<markup/>',
+            },
+            markdown: 'markdown payload',
+            user: {
+              id: '2',
+              innerRenderer: {
+                __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'PlainUserNameRenderer.react',
+                __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'RelayModernEnvironmentExecuteWithNestedMatchTestPlainUserNameRenderer_name$normalization.graphql',
+                __typename: 'PlainUserNameRenderer',
+                data: {
+                  id: 'data-2',
+                  text: 'plaintext!',
+                },
+                plaintext: 'plaintext payload',
+              },
+            },
+          },
+        },
+      },
+    };
+    dataSource.next(payload);
+    jest.runAllTimers();
+
+    expect(operationLoader.load).toBeCalledTimes(1);
+    expect(operationLoader.load.mock.calls[0][0]).toBe(
+      'RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql',
+    );
+    resolveFragment(markdownRendererNormalizationFragment);
+    jest.runAllTimers();
+    expect(callbacks.complete).toBeCalledTimes(0);
+    expect(callbacks.error).toBeCalledTimes(0);
+    expect(callbacks.next).toBeCalledTimes(1);
+
+    expect(callbacks.complete).toBeCalledTimes(0);
+    expect(callbacks.error).toBeCalledTimes(0);
+    expect(callbacks.next).toBeCalledTimes(1);
+
+    expect(operationLoader.load).toBeCalledTimes(2);
+    expect(operationLoader.load.mock.calls[1][0]).toBe(
+      'RelayModernEnvironmentExecuteWithNestedMatchTestPlainUserNameRenderer_name$normalization.graphql',
+    );
+    resolveFragment(plaintextRendererNormalizationFragment);
+    jest.runAllTimers();
+
+    dataSource.complete();
+    expect(callbacks.complete).toBeCalledTimes(1);
+    expect(callbacks.error).toBeCalledTimes(0);
+    expect(callbacks.next).toBeCalledTimes(1);
+  });
+
+  it('calls error() if processing a nested match payload throws', () => {
+    environment.execute({operation}).subscribe(callbacks);
+    const payload = {
+      data: {
+        node: {
+          __typename: 'User',
+          id: '1',
+          outerRenderer: {
+            __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'MarkdownUserNameRenderer.react',
+            __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql',
+            __typename: 'MarkdownUserNameRenderer',
+            data: {
+              id: 'data-1',
+              // NOTE: should be uppercased when normalized (by MarkupHandler)
+              markup: '<markup/>',
+            },
+            markdown: 'markdown payload',
+            user: {
+              id: '2',
+              innerRenderer: {
+                __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'PlainUserNameRenderer.react',
+                __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'RelayModernEnvironmentExecuteWithNestedMatchTestPlainUserNameRenderer_name$normalization.graphql',
+                __typename: 'PlainUserNameRenderer',
+                data: {
+                  id: 'data-2',
+                  text: 'plaintext!',
+                },
+                plaintext: 'plaintext payload',
+              },
+            },
+          },
+        },
+      },
+    };
+    dataSource.next(payload);
+    expect(operationLoader.load).toBeCalledTimes(1);
+    expect(operationLoader.load.mock.calls[0][0]).toBe(
+      'RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql',
+    );
+    resolveFragment(markdownRendererNormalizationFragment);
+
+    operationLoader.load = jest.fn(() => {
+      // Invalid fragment node, no 'selections' field
+      // This is to make sure that users implementing operationLoader
+      // incorrectly still get reasonable error handling
+      return Promise.resolve({} as any);
+    });
+    jest.runAllTimers();
+
+    expect(callbacks.error).toBeCalledTimes(1);
+    expect(callbacks.error.mock.calls[0][0].message).toBe(
+      cannotReadPropertyOfUndefined__DEPRECATED('length'),
+    );
+  });
+
+  it('cancels @match processing if unsubscribed before top-level match resolves', () => {
+    const subscription = environment.execute({operation}).subscribe(callbacks);
+    const payload = {
+      data: {
+        node: {
+          __typename: 'User',
+          id: '1',
+          outerRenderer: {
+            __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'MarkdownUserNameRenderer.react',
+            __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql',
+            __typename: 'MarkdownUserNameRenderer',
+            data: {
+              // NOTE: should be uppercased when normalized (by MarkupHandler)
+              markup: '<markup/>',
+            },
+            markdown: 'markdown payload',
+            user: {
+              id: '2',
+              innerRenderer: {
+                __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'PlainUserNameRenderer.react',
+                __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'RelayModernEnvironmentExecuteWithNestedMatchTestPlainUserNameRenderer_name$normalization.graphql',
+                __typename: 'PlainUserNameRenderer',
+                data: {
+                  text: 'plaintext!',
+                },
+                plaintext: 'plaintext payload',
+              },
+            },
+          },
+        },
+      },
+    };
+    dataSource.next(payload);
+    jest.runAllTimers();
+
+    next.mockClear();
+    complete.mockClear();
+    error.mockClear();
+
+    expect(operationLoader.load).toBeCalledTimes(1);
+    expect(operationLoader.load.mock.calls[0][0]).toEqual(
+      'RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql',
+    );
+    // Cancel before the fragment resolves; normalization should be skipped
+    subscription.unsubscribe();
+    resolveFragment(markdownRendererNormalizationFragment);
+    jest.runAllTimers();
+
+    expect(operationCallback).toBeCalledTimes(1);
+    // result shape tested above
+    const operationSnapshot = operationCallback.mock.calls[0][0];
+    const outerMatchSelector = nullthrows(
+      getSingularSelector(
+        markdownRendererFragment,
+        (operationSnapshot.data?.node as any)?.outerRenderer,
+      ),
+    );
+    // initial outer fragment snapshot is tested above
+    const outerMatchSnapshot = environment.lookup(outerMatchSelector);
+    expect(outerMatchSnapshot.isMissingData).toBe(true);
+    expect(outerMatchSnapshot.data).toEqual({
+      __typename: 'MarkdownUserNameRenderer',
+      data: undefined,
+      markdown: undefined,
+      user: undefined,
+    });
+  });
+
+  it('cancels @match processing if unsubscribed before inner match resolves', () => {
+    const subscription = environment.execute({operation}).subscribe(callbacks);
+    const payload = {
+      data: {
+        node: {
+          __typename: 'User',
+          id: '1',
+          outerRenderer: {
+            __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'MarkdownUserNameRenderer.react',
+            __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestUserQuery:
+              'RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql',
+            __typename: 'MarkdownUserNameRenderer',
+            data: {
+              id: 'data-1',
+              // NOTE: should be uppercased when normalized (by MarkupHandler)
+              markup: '<markup/>',
+            },
+            markdown: 'markdown payload',
+            user: {
+              id: '2',
+              innerRenderer: {
+                __module_component_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'PlainUserNameRenderer.react',
+                __module_operation_RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name:
+                  'RelayModernEnvironmentExecuteWithNestedMatchTestPlainUserNameRenderer_name$normalization.graphql',
+                __typename: 'PlainUserNameRenderer',
+                data: {
+                  id: 'data-2',
+                  text: 'plaintext!',
+                },
+                plaintext: 'plaintext payload',
+              },
+            },
+          },
+        },
+      },
+    };
+    dataSource.next(payload);
+    jest.runAllTimers();
+
+    next.mockClear();
+    complete.mockClear();
+    error.mockClear();
+
+    expect(operationLoader.load).toBeCalledTimes(1);
+    expect(operationLoader.load.mock.calls[0][0]).toEqual(
+      'RelayModernEnvironmentExecuteWithNestedMatchTestMarkdownUserNameRenderer_name$normalization.graphql',
+    );
+    resolveFragment(markdownRendererNormalizationFragment);
+    jest.runAllTimers();
+
+    // Cancel before the inner fragment resolves; normalization should be skipped
+    subscription.unsubscribe();
+    resolveFragment(plaintextRendererNormalizationFragment);
+    jest.runAllTimers();
+
+    expect(operationCallback).toBeCalledTimes(1);
+    // result shape tested above
+    const operationSnapshot = operationCallback.mock.calls[0][0];
+    const outerMatchSelector = nullthrows(
+      getSingularSelector(
+        markdownRendererFragment,
+        (operationSnapshot.data?.node as any)?.outerRenderer,
+      ),
+    );
+    // initial outer fragment snapshot is tested above
+    const outerMatchSnapshot = environment.lookup(outerMatchSelector);
+    const innerMatchSelector = nullthrows(
+      getSingularSelector(
+        plaintextRendererFragment,
+        (outerMatchSnapshot.data?.user as $FlowFixMe)?.innerRenderer,
+      ),
+    );
+    const innerMatchSnapshot = environment.lookup(innerMatchSelector);
+    expect(innerMatchSnapshot.isMissingData).toBe(true);
+    expect(innerMatchSnapshot.data).toEqual({});
+  });
+});

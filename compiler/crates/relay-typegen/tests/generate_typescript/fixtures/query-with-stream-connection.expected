@@ -1,0 +1,67 @@
+==================================== INPUT ====================================
+query TestDefer @raw_response_type {
+  node(id: "1") {
+    ... on User {
+      name
+      friends(first: 10)
+        @stream_connection(key: "TestDefer_friends", initial_count: 0) {
+        edges {
+          node {
+            actor {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}
+==================================== OUTPUT ===================================
+export type TestDefer$variables = Record<PropertyKey, never>;
+export type TestDefer$data = {
+  readonly node: {
+    readonly friends?: {
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly actor: {
+            readonly name: string | null | undefined;
+          } | null | undefined;
+        } | null | undefined;
+      } | null | undefined> | null | undefined;
+    } | null | undefined;
+    readonly name?: string | null | undefined;
+  } | null | undefined;
+};
+export type TestDefer$rawResponse = {
+  readonly node: {
+    readonly __typename: "User";
+    readonly friends: {
+      readonly edges: ReadonlyArray<{
+        readonly cursor: string | null | undefined;
+        readonly node: {
+          readonly __typename: "User";
+          readonly actor: {
+            readonly __typename: string;
+            readonly id: string;
+            readonly name: string | null | undefined;
+          } | null | undefined;
+          readonly id: string;
+        } | null | undefined;
+      } | null | undefined> | null | undefined;
+      readonly pageInfo: {
+        readonly endCursor: string | null | undefined;
+        readonly hasNextPage: boolean | null | undefined;
+      } | null | undefined;
+    } | null | undefined;
+    readonly id: string;
+    readonly name: string | null | undefined;
+  } | {
+    readonly __typename: string;
+    readonly id: string;
+  } | null | undefined;
+};
+export type TestDefer = {
+  rawResponse: TestDefer$rawResponse;
+  response: TestDefer$data;
+  variables: TestDefer$variables;
+};

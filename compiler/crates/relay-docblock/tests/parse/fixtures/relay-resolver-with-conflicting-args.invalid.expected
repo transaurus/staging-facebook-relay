@@ -1,0 +1,38 @@
+==================================== INPUT ====================================
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+// expected-to-throw
+// relay:allow_legacy_relay_resolver_tag
+
+/**
+ * @RelayResolver User.greeting(salutation: String!): RelayResolverValue
+ * @rootFragment myRootFragment
+ *
+ */
+
+graphql`
+  fragment myRootFragment on User @argumentDefinitions(salutation: {type: "String!"}) {
+    name
+  }
+`
+==================================== ERROR ====================================
+✖︎ Unexpected conflicting argument name. This field argument
+
+  /path/to/test/fixture/relay-resolver-with-conflicting-args.invalid.js:12:33
+   11 │ *
+   12 │  * @RelayResolver User.greeting(salutation: String!): RelayResolverValue
+      │                                 ^^^^^^^^^^
+   13 │  * @rootFragment myRootFragment
+
+  ℹ︎ conflicts with this fragment argument
+
+  /path/to/test/fixture/relay-resolver-with-conflicting-args.invalid.js:18:56
+   17 │ 
+   18 │   fragment myRootFragment on User @argumentDefinitions(salutation: {type: "String!"}) {
+      │                                                        ^^^^^^^^^^
+   19 │     name

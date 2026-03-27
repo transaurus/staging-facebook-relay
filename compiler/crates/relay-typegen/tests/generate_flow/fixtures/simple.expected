@@ -1,0 +1,26 @@
+==================================== INPUT ====================================
+fragment LinkedField on User {
+  name
+  profilePicture {
+    uri
+    width
+    height
+  }
+}
+==================================== OUTPUT ===================================
+import type { FragmentType } from "relay-runtime";
+declare export opaque type LinkedField$fragmentType: FragmentType;
+export type LinkedField$data = {|
+  +name: ?string,
+  +profilePicture: ?{|
+    +height: ?number,
+    +uri: ?string,
+    +width: ?number,
+  |},
+  +$fragmentType: LinkedField$fragmentType,
+|};
+export type LinkedField$key = {
+  +$data?: LinkedField$data,
+  +$fragmentSpreads: LinkedField$fragmentType,
+  ...
+};

@@ -1,0 +1,8 @@
+# expected-to-throw
+
+fragment FeedbackFragment on Feedback {
+  id
+  actor @stream(initialCount: 1) {
+    name
+  }
+}

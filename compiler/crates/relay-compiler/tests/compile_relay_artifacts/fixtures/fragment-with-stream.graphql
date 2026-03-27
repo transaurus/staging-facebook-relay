@@ -1,0 +1,13 @@
+query fragmentWithStream_QueryWithFragmentWithStreamQuery($id: ID!) {
+  node(id: $id) {
+    id
+    ...fragmentWithStream_FeedbackFragment @alias
+  }
+}
+
+fragment fragmentWithStream_FeedbackFragment on Feedback {
+  id
+  actors @stream(initialCount: 1, label: "StreamedActorsLabel") {
+    name
+  }
+}

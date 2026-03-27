@@ -1,0 +1,33 @@
+==================================== INPUT ====================================
+fragment FlowRefetchableFragment on Node
+  @refetchable(queryName: "FlowRefetchableFragmentQuery") {
+  id
+  ... on User {
+    name
+  }
+}
+==================================== OUTPUT ===================================
+import { FragmentRefs } from "relay-runtime";
+export type FlowRefetchableFragmentQuery$variables = {
+  id: string;
+};
+export type FlowRefetchableFragmentQuery$data = {
+  readonly node: {
+    readonly " $fragmentSpreads": FragmentRefs<"FlowRefetchableFragment">;
+  } | null | undefined;
+};
+export type FlowRefetchableFragmentQuery = {
+  response: FlowRefetchableFragmentQuery$data;
+  variables: FlowRefetchableFragmentQuery$variables;
+};
+-------------------------------------------------------------------------------
+import { FragmentRefs } from "relay-runtime";
+export type FlowRefetchableFragment$data = {
+  readonly id: string;
+  readonly name?: string | null | undefined;
+  readonly " $fragmentType": "FlowRefetchableFragment";
+};
+export type FlowRefetchableFragment$key = {
+  readonly " $data"?: FlowRefetchableFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"FlowRefetchableFragment">;
+};

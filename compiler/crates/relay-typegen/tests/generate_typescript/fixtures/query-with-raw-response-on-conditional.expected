@@ -1,0 +1,65 @@
+==================================== INPUT ====================================
+query ExampleQuery($id: ID!, $condition: Boolean!) @raw_response_type {
+  node(id: $id) {
+    ...FriendFragment @alias
+  }
+}
+
+fragment FriendFragment on User {
+  ... @include(if: $condition) {
+    name
+    lastName
+    feedback {
+      id
+      name
+    }
+  }
+}
+==================================== OUTPUT ===================================
+import { FragmentRefs } from "relay-runtime";
+export type ExampleQuery$variables = {
+  condition: boolean;
+  id: string;
+};
+export type ExampleQuery$data = {
+  readonly node: {
+    readonly FriendFragment: {
+      readonly " $fragmentSpreads": FragmentRefs<"FriendFragment">;
+    } | null | undefined;
+  } | null | undefined;
+};
+export type ExampleQuery$rawResponse = {
+  readonly node: {
+    readonly __typename: "User";
+    readonly feedback?: {
+      readonly id: string;
+      readonly name: string | null | undefined;
+    } | null | undefined;
+    readonly id: string;
+    readonly lastName?: string | null | undefined;
+    readonly name?: string | null | undefined;
+  } | {
+    readonly __typename: string;
+    readonly id: string;
+  } | null | undefined;
+};
+export type ExampleQuery = {
+  rawResponse: ExampleQuery$rawResponse;
+  response: ExampleQuery$data;
+  variables: ExampleQuery$variables;
+};
+-------------------------------------------------------------------------------
+import { FragmentRefs } from "relay-runtime";
+export type FriendFragment$data = {
+  readonly feedback?: {
+    readonly id: string;
+    readonly name: string | null | undefined;
+  } | null | undefined;
+  readonly lastName?: string | null | undefined;
+  readonly name?: string | null | undefined;
+  readonly " $fragmentType": "FriendFragment";
+};
+export type FriendFragment$key = {
+  readonly " $data"?: FriendFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"FriendFragment">;
+};

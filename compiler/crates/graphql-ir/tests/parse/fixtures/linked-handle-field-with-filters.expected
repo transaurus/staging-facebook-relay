@@ -1,0 +1,157 @@
+==================================== INPUT ====================================
+fragment LinkedHandleField on User {
+  friends(first: 10, orderby: $orderby)
+    @__clientField(handle: "clientFriends", filters: ["first", "orderby"]) {
+    count
+  }
+}
+==================================== OUTPUT ===================================
+[
+    Fragment(
+        FragmentDefinition {
+            name: WithLocation {
+                location: linked-handle-field-with-filters.graphql:9:26,
+                item: FragmentDefinitionName(
+                    "LinkedHandleField",
+                ),
+            },
+            variable_definitions: [],
+            used_global_variables: [
+                VariableDefinition {
+                    name: WithLocation {
+                        location: linked-handle-field-with-filters.graphql:67:75,
+                        item: VariableName(
+                            "orderby",
+                        ),
+                    },
+                    type_: List(
+                        Named(
+                            Scalar(2),
+                        ),
+                    ),
+                    default_value: None,
+                    directives: [],
+                },
+            ],
+            type_condition: Object(71),
+            directives: [],
+            selections: [
+                LinkedField {
+                    alias: None,
+                    definition: WithLocation {
+                        location: linked-handle-field-with-filters.graphql:39:46,
+                        item: FieldID(463),
+                    },
+                    arguments: [
+                        Argument {
+                            name: WithLocation {
+                                location: linked-handle-field-with-filters.graphql:47:52,
+                                item: ArgumentName(
+                                    "first",
+                                ),
+                            },
+                            value: WithLocation {
+                                location: linked-handle-field-with-filters.graphql:54:56,
+                                item: Constant(
+                                    Int(
+                                        10,
+                                    ),
+                                ),
+                            },
+                        },
+                        Argument {
+                            name: WithLocation {
+                                location: linked-handle-field-with-filters.graphql:58:65,
+                                item: ArgumentName(
+                                    "orderby",
+                                ),
+                            },
+                            value: WithLocation {
+                                location: linked-handle-field-with-filters.graphql:67:75,
+                                item: Variable(
+                                    Variable {
+                                        name: WithLocation {
+                                            location: linked-handle-field-with-filters.graphql:67:75,
+                                            item: VariableName(
+                                                "orderby",
+                                            ),
+                                        },
+                                        type_: List(
+                                            Named(
+                                                Scalar(2),
+                                            ),
+                                        ),
+                                    },
+                                ),
+                            },
+                        },
+                    ],
+                    directives: [
+                        Directive {
+                            name: WithLocation {
+                                location: linked-handle-field-with-filters.graphql:81:95,
+                                item: DirectiveName(
+                                    "__clientField",
+                                ),
+                            },
+                            arguments: [
+                                Argument {
+                                    name: WithLocation {
+                                        location: linked-handle-field-with-filters.graphql:96:102,
+                                        item: ArgumentName(
+                                            "handle",
+                                        ),
+                                    },
+                                    value: WithLocation {
+                                        location: linked-handle-field-with-filters.graphql:104:119,
+                                        item: Constant(
+                                            String(
+                                                "clientFriends",
+                                            ),
+                                        ),
+                                    },
+                                },
+                                Argument {
+                                    name: WithLocation {
+                                        location: linked-handle-field-with-filters.graphql:121:128,
+                                        item: ArgumentName(
+                                            "filters",
+                                        ),
+                                    },
+                                    value: WithLocation {
+                                        location: linked-handle-field-with-filters.graphql:130:150,
+                                        item: Constant(
+                                            List(
+                                                [
+                                                    String(
+                                                        "first",
+                                                    ),
+                                                    String(
+                                                        "orderby",
+                                                    ),
+                                                ],
+                                            ),
+                                        ),
+                                    },
+                                },
+                            ],
+                            data: None,
+                            location: linked-handle-field-with-filters.graphql:81:151,
+                        },
+                    ],
+                    selections: [
+                        ScalarField {
+                            alias: None,
+                            definition: WithLocation {
+                                location: linked-handle-field-with-filters.graphql:158:163,
+                                item: FieldID(179),
+                            },
+                            arguments: [],
+                            directives: [],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+]

@@ -1,0 +1,15 @@
+compiler/
+dist/
+docs/
+**/node_modules/
+lib/
+scripts/lib/
+# TODO: Enable ESLint for website.
+website/
+website-prototyping-tools/HelloApp.js
+website-prototyping-tools/node_modules
+*.md
+src/flow/
+packages/relay-flight-experimental/
+# The VSCode Extension gets linted with a separate setup
+vscode-extension

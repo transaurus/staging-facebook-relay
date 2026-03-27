@@ -1,0 +1,30 @@
+==================================== INPUT ====================================
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+// expected-to-throw
+// relay:allow_legacy_relay_resolver_tag
+
+/**
+ * @RelayResolver User.favorite_page: Page
+ * @rootFragment myRootFragment
+ * @notValid myRootFragment
+ */
+
+graphql`
+  fragment myRootFragment on User {
+    name
+  }
+`
+==================================== ERROR ====================================
+✖︎ Unexpected docblock field `@notValid`
+
+  /path/to/test/fixture/relay-resolver-invalid-field.invalid.js:14:5
+   13 │  * @rootFragment myRootFragment
+   14 │  * @notValid myRootFragment
+      │     ^^^^^^^^
+   15 │

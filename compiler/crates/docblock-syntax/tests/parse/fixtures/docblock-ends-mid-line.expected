@@ -1,0 +1,18 @@
+==================================== INPUT ====================================
+/**
+ * Hello World */
+==================================== OUTPUT ===================================
+DocblockAST {
+    location: docblock-ends-mid-line.ecmascript:0:16,
+    sections: [
+        FreeText(
+            WithLocation {
+                location: docblock-ends-mid-line.ecmascript:5:17,
+                item: "Hello World ",
+            },
+        ),
+    ],
+    source_hash: ResolverSourceHash(
+        "4595a2a06568991a6d7594afbbe370ab",
+    ),
+}

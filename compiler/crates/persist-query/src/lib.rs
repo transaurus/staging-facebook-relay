@@ -1,0 +1,89 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+#![deny(warnings)]
+#![deny(rust_2018_idioms)]
+#![deny(clippy::all)]
+
+mod errors;
+
+use std::fmt;
+
+use bytes::Bytes;
+pub use errors::PersistError;
+use http::Method;
+use http::Request;
+use http_body_util::BodyExt as _;
+use http_body_util::Full;
+use hyper_tls::HttpsConnector;
+use hyper_util::client::legacy::Client;
+use hyper_util::rt::TokioExecutor;
+use serde::Deserialize;
+use url::form_urlencoded;
+
+#[derive(Debug, Deserialize)]
+#[serde(untagged)]
+enum Response {
+    Success { id: String },
+    Error { error: ResponseError },
+}
+
+#[derive(Debug, Deserialize)]
+struct ResponseError {
+    message: String,
+}
+
+impl fmt::Display for ResponseError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(&self.message)
+    }
+}
+
+pub async fn persist(
+    document: &str,
+    uri: &str,
+    params: impl IntoIterator<Item = (&String, &String)>,
+    extra_headers: impl IntoIterator<Item = (&String, &String)>,
+) -> Result<String, PersistError> {
+    let request_body = {
+        let mut request_body = form_urlencoded::Serializer::new(String::new());
+        for param in params {
+            request_body.append_pair(param.0, param.1);
+        }
+        request_body.append_pair("text", document);
+        request_body.finish()
+    };
+
+    let mut builder = Request::builder()
+        .method(Method::POST)
+        .uri(uri)
+        .header("content-type", "application/x-www-form-urlencoded");
+    for (k, v) in extra_headers {
+        builder = builder.header(k, v);
+    }
+    let req = builder
+        .body(Full::new(Bytes::from(request_body)))
+        .map_err(|err| PersistError::NetworkCreateError {
+            error: Box::new(err),
+        })?;
+    let https = HttpsConnector::new();
+    let client = Client::builder(TokioExecutor::new()).build(https);
+    let res = client.request(req).await?;
+    let bytes = res.into_body().collect().await?.to_bytes();
+    let result: Response =
+        serde_json::from_slice(&bytes).map_err(|err| PersistError::DetailedResponseParseError {
+            source: err,
+            raw_response: String::from_utf8_lossy(&bytes).to_string(),
+        })?;
+
+    match result {
+        Response::Success { id } => Ok(id),
+        Response::Error { error } => Err(PersistError::ErrorResponse {
+            message: error.message,
+        }),
+    }
+}

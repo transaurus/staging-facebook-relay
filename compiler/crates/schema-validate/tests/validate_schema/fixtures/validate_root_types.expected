@@ -1,0 +1,27 @@
+==================================== INPUT ====================================
+directive @fetchable(field_name: String) on OBJECT
+
+interface Hominid {
+  pet: Pet
+}
+
+interface Canine {
+  owner: Human
+}
+
+type Pet implements Canine @fetchable(field_name: "id") {
+  id: ID
+  owner: Human
+}
+
+type Human implements Hominid @fetchable(field_name: "id") {
+  id: ID
+  pet: Pet
+}
+==================================== OUTPUT ===================================
+✖︎ 'Query' root type must be provided.
+
+  <generated>:1:1
+    1 │ directive @fetchable(field_name: String) on OBJECT
+      │ ^
+    2 │

@@ -1,0 +1,93 @@
+==================================== INPUT ====================================
+query ExampleQuery($id: ID!) {
+  node(id: $id) {
+    id
+  }
+}
+
+fragment ExampleFragment on User {
+  id
+}
+
+mutation TestMutation($input: CommentCreateInput!) {
+  commentCreate(input: $input) {
+    comment {
+      id
+    }
+  }
+}
+
+subscription TestSubscription($input: FeedbackLikeInput) {
+  feedbackLikeSubscribe(input: $input) {
+    feedback {
+      id
+    }
+  }
+}
+==================================== OUTPUT ===================================
+export type ExampleQuery$variables = {
+  id: string;
+};
+export type ExampleQuery$data = {
+  readonly node: {
+    readonly id: string;
+  } | null | undefined;
+};
+export type ExampleQuery = {
+  response: ExampleQuery$data;
+  variables: ExampleQuery$variables;
+};
+-------------------------------------------------------------------------------
+export type CommentCreateInput = {
+  client_mutation_id: string;
+  feedback?: CommentfeedbackFeedback | null | undefined;
+  feedbackId?: string | null | undefined;
+};
+export type CommentfeedbackFeedback = {
+  comment?: FeedbackcommentComment | null | undefined;
+};
+export type FeedbackcommentComment = {
+  feedback?: CommentfeedbackFeedback | null | undefined;
+};
+export type TestMutation$variables = {
+  input: CommentCreateInput;
+};
+export type TestMutation$data = {
+  readonly commentCreate: {
+    readonly comment: {
+      readonly id: string;
+    } | null | undefined;
+  } | null | undefined;
+};
+export type TestMutation = {
+  response: TestMutation$data;
+  variables: TestMutation$variables;
+};
+-------------------------------------------------------------------------------
+export type FeedbackLikeInput = {
+  feedbackId?: string | null | undefined;
+};
+export type TestSubscription$variables = {
+  input?: FeedbackLikeInput | null | undefined;
+};
+export type TestSubscription$data = {
+  readonly feedbackLikeSubscribe: {
+    readonly feedback: {
+      readonly id: string;
+    } | null | undefined;
+  } | null | undefined;
+};
+export type TestSubscription = {
+  response: TestSubscription$data;
+  variables: TestSubscription$variables;
+};
+-------------------------------------------------------------------------------
+import { FragmentRefs } from "relay-runtime";
+export type ExampleFragment$data = {
+  readonly id: string;
+  readonly " $fragmentType": "ExampleFragment";
+};
+export type ExampleFragment$key = {
+  readonly " $data"?: ExampleFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ExampleFragment">;
+};

@@ -1,0 +1,138 @@
+==================================== INPUT ====================================
+fragment InlineFragment on Node {
+  id
+  ... on Actor {
+    id
+    name
+  }
+  ... on User {
+    message {
+      text
+    }
+  }
+}
+
+fragment InlineFragmentWithOverlappingFields on Actor {
+  ... on User {
+    hometown {
+      id
+      name
+    }
+  }
+  ... on Page {
+    name
+    hometown {
+      id
+      message {
+        text
+      }
+    }
+  }
+}
+
+fragment InlineFragmentConditionalID on Node {
+  ... on Actor {
+    id # nullable since it's conditional
+    name
+  }
+}
+
+fragment InlineFragmentKitchenSink on Story {
+  actor {
+    id
+    profilePicture {
+      uri
+    }
+    ... on User {
+      id
+      name
+      ...SomeFragment @alias
+      profilePicture {
+        width
+      }
+    }
+    ... on Page {
+      profilePicture {
+        uri
+        height
+      }
+    }
+  }
+}
+
+fragment SomeFragment on User {
+  __typename
+}
+==================================== OUTPUT ===================================
+import { FragmentRefs } from "relay-runtime";
+export type InlineFragment$data = {
+  readonly id: string;
+  readonly message?: {
+    readonly text: string | null | undefined;
+  } | null | undefined;
+  readonly name?: string | null | undefined;
+  readonly " $fragmentType": "InlineFragment";
+};
+export type InlineFragment$key = {
+  readonly " $data"?: InlineFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"InlineFragment">;
+};
+-------------------------------------------------------------------------------
+import { FragmentRefs } from "relay-runtime";
+export type InlineFragmentConditionalID$data = {
+  readonly id?: string;
+  readonly name?: string | null | undefined;
+  readonly " $fragmentType": "InlineFragmentConditionalID";
+};
+export type InlineFragmentConditionalID$key = {
+  readonly " $data"?: InlineFragmentConditionalID$data;
+  readonly " $fragmentSpreads": FragmentRefs<"InlineFragmentConditionalID">;
+};
+-------------------------------------------------------------------------------
+import { FragmentRefs } from "relay-runtime";
+export type InlineFragmentKitchenSink$data = {
+  readonly actor: {
+    readonly SomeFragment?: {
+      readonly " $fragmentSpreads": FragmentRefs<"SomeFragment">;
+    } | null | undefined;
+    readonly id: string;
+    readonly name?: string | null | undefined;
+    readonly profilePicture: {
+      readonly height?: number | null | undefined;
+      readonly uri: string | null | undefined;
+      readonly width?: number | null | undefined;
+    } | null | undefined;
+  } | null | undefined;
+  readonly " $fragmentType": "InlineFragmentKitchenSink";
+};
+export type InlineFragmentKitchenSink$key = {
+  readonly " $data"?: InlineFragmentKitchenSink$data;
+  readonly " $fragmentSpreads": FragmentRefs<"InlineFragmentKitchenSink">;
+};
+-------------------------------------------------------------------------------
+import { FragmentRefs } from "relay-runtime";
+export type InlineFragmentWithOverlappingFields$data = {
+  readonly hometown?: {
+    readonly id: string;
+    readonly message?: {
+      readonly text: string | null | undefined;
+    } | null | undefined;
+    readonly name: string | null | undefined;
+  } | null | undefined;
+  readonly name?: string | null | undefined;
+  readonly " $fragmentType": "InlineFragmentWithOverlappingFields";
+};
+export type InlineFragmentWithOverlappingFields$key = {
+  readonly " $data"?: InlineFragmentWithOverlappingFields$data;
+  readonly " $fragmentSpreads": FragmentRefs<"InlineFragmentWithOverlappingFields">;
+};
+-------------------------------------------------------------------------------
+import { FragmentRefs } from "relay-runtime";
+export type SomeFragment$data = {
+  readonly __typename: "User";
+  readonly " $fragmentType": "SomeFragment";
+};
+export type SomeFragment$key = {
+  readonly " $data"?: SomeFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SomeFragment">;
+};

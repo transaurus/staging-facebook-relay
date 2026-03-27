@@ -1,0 +1,95 @@
+==================================== INPUT ====================================
+query ExampleQuery($id: ID!) {
+  node(id: $id) {
+    id
+  }
+}
+
+fragment ExampleFragment on User {
+  id
+}
+
+mutation TestMutation($input: CommentCreateInput!) {
+  commentCreate(input: $input) {
+    comment {
+      id
+    }
+  }
+}
+
+subscription TestSubscription($input: FeedbackLikeInput) {
+  feedbackLikeSubscribe(input: $input) {
+    feedback {
+      id
+    }
+  }
+}
+==================================== OUTPUT ===================================
+export type ExampleQuery$variables = {|
+  id: string,
+|};
+export type ExampleQuery$data = {|
+  +node: ?{|
+    +id: string,
+  |},
+|};
+export type ExampleQuery = {|
+  response: ExampleQuery$data,
+  variables: ExampleQuery$variables,
+|};
+-------------------------------------------------------------------------------
+export type CommentCreateInput = {|
+  client_mutation_id: string,
+  feedback?: ?CommentfeedbackFeedback,
+  feedbackId?: ?string,
+|};
+export type CommentfeedbackFeedback = {|
+  comment?: ?FeedbackcommentComment,
+|};
+export type FeedbackcommentComment = {|
+  feedback?: ?CommentfeedbackFeedback,
+|};
+export type TestMutation$variables = {|
+  input: CommentCreateInput,
+|};
+export type TestMutation$data = {|
+  +commentCreate: ?{|
+    +comment: ?{|
+      +id: string,
+    |},
+  |},
+|};
+export type TestMutation = {|
+  response: TestMutation$data,
+  variables: TestMutation$variables,
+|};
+-------------------------------------------------------------------------------
+export type FeedbackLikeInput = {|
+  feedbackId?: ?string,
+|};
+export type TestSubscription$variables = {|
+  input?: ?FeedbackLikeInput,
+|};
+export type TestSubscription$data = {|
+  +feedbackLikeSubscribe: ?{|
+    +feedback: ?{|
+      +id: string,
+    |},
+  |},
+|};
+export type TestSubscription = {|
+  response: TestSubscription$data,
+  variables: TestSubscription$variables,
+|};
+-------------------------------------------------------------------------------
+import type { FragmentType } from "relay-runtime";
+declare export opaque type ExampleFragment$fragmentType: FragmentType;
+export type ExampleFragment$data = {|
+  +id: string,
+  +$fragmentType: ExampleFragment$fragmentType,
+|};
+export type ExampleFragment$key = {
+  +$data?: ExampleFragment$data,
+  +$fragmentSpreads: ExampleFragment$fragmentType,
+  ...
+};

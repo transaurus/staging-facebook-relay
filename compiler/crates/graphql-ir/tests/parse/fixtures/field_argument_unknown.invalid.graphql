@@ -1,0 +1,6 @@
+# expected-to-throw
+query TestQuery {
+  task(cucumber: 123) {
+    title
+  }
+}

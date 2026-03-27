@@ -1,0 +1,84 @@
+==================================== INPUT ====================================
+fragment UserProfile on User {
+  profilePicture(size: $ProfilePicture_SIZE) {
+    ...PhotoFragment @relay(mask: false)
+
+    # duplicated field should be merged
+    ...AnotherRecursiveFragment @relay(mask: false)
+
+    # Compose child fragment
+    ...PhotoFragment
+  }
+}
+
+fragment PhotoFragment on Image {
+  uri
+  ...RecursiveFragment @relay(mask: false)
+}
+
+fragment RecursiveFragment on Image @relay(mask: false) {
+  uri
+  width
+}
+
+fragment AnotherRecursiveFragment on Image {
+  uri
+  height
+}
+==================================== OUTPUT ===================================
+import type { FragmentType } from "relay-runtime";
+declare export opaque type AnotherRecursiveFragment$fragmentType: FragmentType;
+export type AnotherRecursiveFragment$data = {|
+  +height: ?number,
+  +uri: ?string,
+  +$fragmentType: AnotherRecursiveFragment$fragmentType,
+|};
+export type AnotherRecursiveFragment$key = {
+  +$data?: AnotherRecursiveFragment$data,
+  +$fragmentSpreads: AnotherRecursiveFragment$fragmentType,
+  ...
+};
+-------------------------------------------------------------------------------
+import type { FragmentType } from "relay-runtime";
+declare export opaque type PhotoFragment$fragmentType: FragmentType;
+export type PhotoFragment$data = {|
+  +uri: ?string,
+  +width: ?number,
+  +$fragmentType: PhotoFragment$fragmentType,
+|};
+export type PhotoFragment$key = {
+  +$data?: PhotoFragment$data,
+  +$fragmentSpreads: PhotoFragment$fragmentType,
+  ...
+};
+-------------------------------------------------------------------------------
+import type { FragmentType } from "relay-runtime";
+declare export opaque type RecursiveFragment$fragmentType: FragmentType;
+export type RecursiveFragment$data = {
+  +uri: ?string,
+  +width: ?number,
+  ...
+};
+export type RecursiveFragment$key = {
+  +$data?: RecursiveFragment$data,
+  +$fragmentSpreads: RecursiveFragment$fragmentType,
+  ...
+};
+-------------------------------------------------------------------------------
+import type { PhotoFragment$fragmentType } from "PhotoFragment.graphql";
+import type { FragmentType } from "relay-runtime";
+declare export opaque type UserProfile$fragmentType: FragmentType;
+export type UserProfile$data = {|
+  +profilePicture: ?{|
+    +height: ?number,
+    +uri: ?string,
+    +width: ?number,
+    +$fragmentSpreads: PhotoFragment$fragmentType,
+  |},
+  +$fragmentType: UserProfile$fragmentType,
+|};
+export type UserProfile$key = {
+  +$data?: UserProfile$data,
+  +$fragmentSpreads: UserProfile$fragmentType,
+  ...
+};

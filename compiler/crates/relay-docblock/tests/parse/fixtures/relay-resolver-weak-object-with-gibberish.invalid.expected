@@ -1,0 +1,23 @@
+==================================== INPUT ====================================
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+// expected-to-throw
+// relay:allow_legacy_relay_resolver_tag
+
+/**
+ * @RelayResolver ClientUser Foo Baz Baz Abracadabra
+ * @weak
+ */
+==================================== ERROR ====================================
+✖︎ The compiler attempted to parse "ClientUser Foo Baz Baz Abracadabra" as a GraphQL type (e.g. `Viewer` or `User`), but had unparsed characters remaining. Try removing everything after "ClientUser".
+
+  /path/to/test/fixture/relay-resolver-weak-object-with-gibberish.invalid.js:12:19
+   11 │ *
+   12 │  * @RelayResolver ClientUser Foo Baz Baz Abracadabra
+      │                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   13 │  * @weak

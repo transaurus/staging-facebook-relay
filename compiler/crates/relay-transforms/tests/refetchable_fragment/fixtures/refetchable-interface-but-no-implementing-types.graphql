@@ -1,0 +1,15 @@
+fragment RefetchableFragmentFoo on RefetchableInterfaceFoo
+  @refetchable(queryName: "RefetchableFragmentFooQuery") {
+  id
+}
+
+
+# %extensions%
+
+interface RefetchableInterfaceFoo @fetchable(field_name: "id") {
+    id: ID!
+}
+
+extend type Query {
+  fetch__RefetchableInterfaceFoo(id: ID!): RefetchableInterfaceFoo
+}

@@ -1,0 +1,68 @@
+==================================== INPUT ====================================
+fragment Bar on Node {
+  # Since __typename is omitted here, we will end up with a single object type
+  # rather than a union type. Even though `name` is @required, it will still be
+  # nullable in the collapsed object's type since the object may not match `User`.
+  ... on User {
+    name @required(action: LOG)
+  }
+  ... on Comment {
+    body {
+      text
+    }
+  }
+}
+
+fragment Foo on Node {
+  __typename
+  ... on User {
+    # Ideally this would only cause the `__typename == 'User'` case to become
+    # nullable, but currently it just makes the entire union type nullable. Not
+    # ideal, but tollerable.
+    name @required(action: LOG)
+  }
+  ... on Comment {
+    body {
+      text
+    }
+  }
+}
+==================================== OUTPUT ===================================
+import type { FragmentType } from "relay-runtime";
+declare export opaque type Bar$fragmentType: FragmentType;
+export type Bar$data = ?{|
+  +body?: ?{|
+    +text: ?string,
+  |},
+  +name?: string,
+  +$fragmentType: Bar$fragmentType,
+|};
+export type Bar$key = {
+  +$data?: Bar$data,
+  +$fragmentSpreads: Bar$fragmentType,
+  ...
+};
+-------------------------------------------------------------------------------
+import type { FragmentType } from "relay-runtime";
+declare export opaque type Foo$fragmentType: FragmentType;
+export type Foo$data = ?({|
+  +__typename: "Comment",
+  +body: ?{|
+    +text: ?string,
+  |},
+  +$fragmentType: Foo$fragmentType,
+|} | {|
+  +__typename: "User",
+  +name: string,
+  +$fragmentType: Foo$fragmentType,
+|} | {|
+  // This will never be '%other', but we need some
+  // value in case none of the concrete values match.
+  +__typename: "%other",
+  +$fragmentType: Foo$fragmentType,
+|});
+export type Foo$key = {
+  +$data?: Foo$data,
+  +$fragmentSpreads: Foo$fragmentType,
+  ...
+};

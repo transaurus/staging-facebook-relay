@@ -1,0 +1,26 @@
+{
+  "docs": [
+    {
+      "type": "category",
+      "label": "Relay Hooks",
+      "items": [
+        {
+          "type": "doc",
+          "id": "introduction-to-relay"
+        },
+        {
+          "type": "doc",
+          "id": "step-by-step"
+        },
+        {
+          "type": "doc",
+          "id": "a-guided-tour-of-relay"
+        },
+        {
+          "type": "doc",
+          "id": "api-reference"
+        }
+      ]
+    }
+  ]
+}

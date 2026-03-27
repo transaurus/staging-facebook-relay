@@ -1,0 +1,19 @@
+//- foo.ts
+/**
+ * @relayField User.foo: RelayResolverValue
+ */
+
+//- bar.ts
+graphql`fragment barFragment on User {
+   foo
+}`
+
+//- relay.config.json
+{
+   "language": "typescript",
+   "schema": "./schema.graphql"
+}
+
+//- schema.graphql
+type Query { user: User }
+type User { name: String }

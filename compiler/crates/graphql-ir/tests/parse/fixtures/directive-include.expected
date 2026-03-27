@@ -1,0 +1,185 @@
+==================================== INPUT ====================================
+fragment TestFragment on User {
+  id @include(if: $Cond)
+  ... on User @include(if: $Cond) {
+    firstName
+  }
+  ...Foo @include(if: $Cond)
+}
+
+fragment Foo on User {
+  id
+}
+==================================== OUTPUT ===================================
+[
+    Fragment(
+        FragmentDefinition {
+            name: WithLocation {
+                location: directive-include.graphql:9:21,
+                item: FragmentDefinitionName(
+                    "TestFragment",
+                ),
+            },
+            variable_definitions: [],
+            used_global_variables: [
+                VariableDefinition {
+                    name: WithLocation {
+                        location: directive-include.graphql:133:138,
+                        item: VariableName(
+                            "Cond",
+                        ),
+                    },
+                    type_: NonNull(
+                        Named(
+                            Scalar(3),
+                        ),
+                    ),
+                    default_value: None,
+                    directives: [],
+                },
+            ],
+            type_condition: Object(71),
+            directives: [],
+            selections: [
+                Condition {
+                    selections: [
+                        ScalarField {
+                            alias: None,
+                            definition: WithLocation {
+                                location: directive-include.graphql:34:36,
+                                item: FieldID(465),
+                            },
+                            arguments: [],
+                            directives: [],
+                        },
+                    ],
+                    value: Variable(
+                        Variable {
+                            name: WithLocation {
+                                location: directive-include.graphql:50:55,
+                                item: VariableName(
+                                    "Cond",
+                                ),
+                            },
+                            type_: NonNull(
+                                Named(
+                                    Scalar(3),
+                                ),
+                            ),
+                        },
+                    ),
+                    passing_value: true,
+                    location: directive-include.graphql:37:45,
+                },
+                Condition {
+                    selections: [
+                        InlineFragment {
+                            type_condition: Some(
+                                Object(71),
+                            ),
+                            directives: [],
+                            selections: [
+                                ScalarField {
+                                    alias: None,
+                                    definition: WithLocation {
+                                        location: directive-include.graphql:97:106,
+                                        item: FieldID(462),
+                                    },
+                                    arguments: [],
+                                    directives: [],
+                                },
+                            ],
+                            spread_location: directive-include.graphql:59:62,
+                        },
+                    ],
+                    value: Variable(
+                        Variable {
+                            name: WithLocation {
+                                location: directive-include.graphql:84:89,
+                                item: VariableName(
+                                    "Cond",
+                                ),
+                            },
+                            type_: NonNull(
+                                Named(
+                                    Scalar(3),
+                                ),
+                            ),
+                        },
+                    ),
+                    passing_value: true,
+                    location: directive-include.graphql:71:79,
+                },
+                Condition {
+                    selections: [
+                        FragmentSpread {
+                            fragment: WithLocation {
+                                location: directive-include.graphql:116:119,
+                                item: FragmentDefinitionName(
+                                    "Foo",
+                                ),
+                            },
+                            arguments: [],
+                            signature: Some(
+                                FragmentSignature {
+                                    name: WithLocation {
+                                        location: directive-include.graphql:152:155,
+                                        item: FragmentDefinitionName(
+                                            "Foo",
+                                        ),
+                                    },
+                                    variable_definitions: [],
+                                    type_condition: Object(71),
+                                    directives: [],
+                                },
+                            ),
+                            directives: [],
+                        },
+                    ],
+                    value: Variable(
+                        Variable {
+                            name: WithLocation {
+                                location: directive-include.graphql:133:138,
+                                item: VariableName(
+                                    "Cond",
+                                ),
+                            },
+                            type_: NonNull(
+                                Named(
+                                    Scalar(3),
+                                ),
+                            ),
+                        },
+                    ),
+                    passing_value: true,
+                    location: directive-include.graphql:120:128,
+                },
+            ],
+        },
+    ),
+    Fragment(
+        FragmentDefinition {
+            name: WithLocation {
+                location: directive-include.graphql:152:155,
+                item: FragmentDefinitionName(
+                    "Foo",
+                ),
+            },
+            variable_definitions: [],
+            used_global_variables: [],
+            type_condition: Object(71),
+            directives: [],
+            selections: [
+                ScalarField {
+                    alias: None,
+                    definition: WithLocation {
+                        location: directive-include.graphql:168:170,
+                        item: FieldID(465),
+                    },
+                    arguments: [],
+                    directives: [],
+                },
+            ],
+        },
+    ),
+]

@@ -1,0 +1,71 @@
+==================================== INPUT ====================================
+directive @fetchable(field_name: String) on OBJECT
+
+interface Hominid {
+  pet: Pet
+}
+
+interface Canine {
+  owner: Human
+}
+
+type Pet implements Canine @fetchable(field_name: "id") {
+  id: ID
+  owner: Human
+  type: PetType
+}
+
+type Human implements Hominid @fetchable(field_name: "id") {
+  id: ID
+  pet: Pet
+}
+
+type Query {
+  fetch__Human(id: ID!): Human
+  user: Human
+}
+
+enum PetType {
+  DOG
+  CAT
+}
+
+enum EmptyPetType
+
+enum InvlidPetType {
+  true
+  false
+  null
+}
+==================================== OUTPUT ===================================
+✖︎ Enum must define one or more values.
+
+  validate_enum.graphql:32:6
+   31 │ 
+   32 │ enum EmptyPetType
+      │      ^^^^^^^^^^^^
+   33 │ 
+
+✖︎ Enum cannot include value: true.
+
+  validate_enum.graphql:34:6
+   33 │ 
+   34 │ enum InvlidPetType {
+      │      ^^^^^^^^^^^^^
+   35 │   true
+
+✖︎ Enum cannot include value: false.
+
+  validate_enum.graphql:34:6
+   33 │ 
+   34 │ enum InvlidPetType {
+      │      ^^^^^^^^^^^^^
+   35 │   true
+
+✖︎ Enum cannot include value: null.
+
+  validate_enum.graphql:34:6
+   33 │ 
+   34 │ enum InvlidPetType {
+      │      ^^^^^^^^^^^^^
+   35 │   true

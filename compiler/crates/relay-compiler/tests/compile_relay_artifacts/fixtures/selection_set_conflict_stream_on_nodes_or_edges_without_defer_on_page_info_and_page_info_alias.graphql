@@ -1,0 +1,19 @@
+# TODO throw
+query selectionSetConflictStreamOnNodesOrEdgesWithoutDeferOnPageInfoAndPageInfoAliasQuery {
+  me {
+    ... on User {
+      friends {
+        ... on FriendsConnection {
+          pagination: pageInfo {
+            hasNextPage
+          }
+        }
+        edges @stream(label: "b", initialCount: 1) {
+          node {
+            id
+          }
+        }
+      }
+    }
+  }
+}

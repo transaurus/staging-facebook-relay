@@ -1,0 +1,61 @@
+==================================== INPUT ====================================
+fragment TestFragment on User {
+  id @customDirective(level: 11)
+}
+==================================== OUTPUT ===================================
+[
+    Fragment(
+        FragmentDefinition {
+            name: WithLocation {
+                location: directive-generic.graphql:9:21,
+                item: FragmentDefinitionName(
+                    "TestFragment",
+                ),
+            },
+            variable_definitions: [],
+            used_global_variables: [],
+            type_condition: Object(71),
+            directives: [],
+            selections: [
+                ScalarField {
+                    alias: None,
+                    definition: WithLocation {
+                        location: directive-generic.graphql:34:36,
+                        item: FieldID(465),
+                    },
+                    arguments: [],
+                    directives: [
+                        Directive {
+                            name: WithLocation {
+                                location: directive-generic.graphql:37:53,
+                                item: DirectiveName(
+                                    "customDirective",
+                                ),
+                            },
+                            arguments: [
+                                Argument {
+                                    name: WithLocation {
+                                        location: directive-generic.graphql:54:59,
+                                        item: ArgumentName(
+                                            "level",
+                                        ),
+                                    },
+                                    value: WithLocation {
+                                        location: directive-generic.graphql:61:63,
+                                        item: Constant(
+                                            Int(
+                                                11,
+                                            ),
+                                        ),
+                                    },
+                                },
+                            ],
+                            data: None,
+                            location: directive-generic.graphql:37:64,
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+]
