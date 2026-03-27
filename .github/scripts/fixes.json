@@ -1,0 +1,58 @@
+{
+  "description": "Repository-specific fixes for facebook/relay",
+  "fixes": {
+    "website/sidebars.js": [
+      {
+        "type": "replace",
+        "find": "        {\n          'Relay Resolvers': [\n            'api-reference/relay-resolvers/docblock-format',\n            'api-reference/relay-resolvers/runtime-functions',\n          ],\n        },",
+        "replace": "        {\n          type: 'category',\n          label: 'Relay Resolvers',\n          key: 'APIReferenceRelayResolvers',\n          items: [\n            'api-reference/relay-resolvers/docblock-format',\n            'api-reference/relay-resolvers/runtime-functions',\n          ],\n        },",
+        "comment": "Fix duplicate sidebar translation key: sidebars.js has two 'Relay Resolvers' categories (one in Client Side Data under Feature Guides, one in API Reference). Convert the API Reference one to long-form with a unique key to avoid translation key collision."
+      }
+    ],
+    "website/versioned_sidebars/version-v17.0.0-sidebars.json": [
+      {
+        "type": "json_category_key",
+        "category_label": "Relay Resolvers",
+        "items_prefix": "api-reference/",
+        "new_key": "APIReferenceRelayResolvers",
+        "comment": "Fix duplicate sidebar translation key: versioned sidebar has two 'Relay Resolvers' categories. Add unique key to the API Reference one."
+      }
+    ],
+    "website/versioned_sidebars/version-v18.0.0-sidebars.json": [
+      {
+        "type": "json_category_key",
+        "category_label": "Relay Resolvers",
+        "items_prefix": "api-reference/",
+        "new_key": "APIReferenceRelayResolvers",
+        "comment": "Fix duplicate sidebar translation key: versioned sidebar has two 'Relay Resolvers' categories. Add unique key to the API Reference one."
+      }
+    ],
+    "website/versioned_sidebars/version-v19.0.0-sidebars.json": [
+      {
+        "type": "json_category_key",
+        "category_label": "Relay Resolvers",
+        "items_prefix": "api-reference/",
+        "new_key": "APIReferenceRelayResolvers",
+        "comment": "Fix duplicate sidebar translation key: versioned sidebar has two 'Relay Resolvers' categories. Add unique key to the API Reference one."
+      }
+    ],
+    "website/versioned_sidebars/version-v20.0.0-sidebars.json": [
+      {
+        "type": "json_category_key",
+        "category_label": "Relay Resolvers",
+        "items_prefix": "api-reference/",
+        "new_key": "APIReferenceRelayResolvers",
+        "comment": "Fix duplicate sidebar translation key: versioned sidebar has two 'Relay Resolvers' categories. Add unique key to the API Reference one."
+      }
+    ],
+    "website/versioned_sidebars/version-v20.1.0-sidebars.json": [
+      {
+        "type": "json_category_key",
+        "category_label": "Relay Resolvers",
+        "items_prefix": "api-reference/",
+        "new_key": "APIReferenceRelayResolvers",
+        "comment": "Fix duplicate sidebar translation key: versioned sidebar has two 'Relay Resolvers' categories. Add unique key to the API Reference one."
+      }
+    ]
+  }
+}
