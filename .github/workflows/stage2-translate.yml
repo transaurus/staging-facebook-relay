@@ -36,7 +36,6 @@ jobs:
 
       - name: 'Enable Corepack'
         run: corepack enable
-          cat .github/scripts/meta.json
 
       - name: 'Add i18n locale config to docusaurus.config'
         run: |
@@ -77,10 +76,11 @@ jobs:
             }else{
               const ls=locs.map(l=>"\""+l+"\"").join(", ");
               const ic="\n  i18n: {\n    defaultLocale: \"en\",\n    locales: [\"en\", "+ls+"],\n  },";
-              const ps=[/(module\.exports\s*=\s*\{)/,/(export\s+default\s*\{)/,/(const\s+config\s*[:=]\s*\{)/];
+              const ps=[/(module\.exports\s*=\s*\{)/,/(export\s+default\s+\{)/,/(export\s+default\s+satisfies\s+\w+\s*\{)/,/(const\s+\w+\s*[:=]\s*(?:\w+\s*)?[:=]?\s*\{)/];
               let done=false;
               for(const p of ps){const m=c.match(p);if(m){c=c.slice(0,m.index+m[0].length)+ic+c.slice(m.index+m[0].length);done=true;console.log("Injected after:",m[0]);break}}
-              if(!done){const f=c.indexOf("{");if(f>=0)c=c.slice(0,f+1)+ic+c.slice(f+1)}
+              if(!done){const lines=c.split("\n");for(let i=0;i<lines.length;i++){if(lines[i].includes("Config")&&lines[i].includes("{")){c=c.slice(0,c.indexOf(lines[i])+lines[i].indexOf("{")+1)+ic+c.slice(c.indexOf(lines[i])+lines[i].indexOf("{")+1);done=true;console.log("Injected at Config line:",i);break}}}
+              if(!done){const f=c.indexOf("{");if(f>=0){c=c.slice(0,f+1)+ic+c.slice(f+1);console.log("Fallback: injected at first {")}}
             }
             fs.writeFileSync(cf,c);
           '
