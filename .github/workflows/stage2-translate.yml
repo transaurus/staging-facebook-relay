@@ -159,6 +159,10 @@ jobs:
           DOCUSAURUS_IGNORE_SSG_WARNINGS: 'true'
         run: |
           DOC_ROOT="${{ steps.meta.outputs.docusaurusRoot }}"
+          BUILD_OUTPUT="${{ steps.meta.outputs.buildOutput }}"
+
+          # Clean previous build output to avoid EEXIST errors when rebuilding
+          rm -rf "${DOC_ROOT}/${BUILD_OUTPUT}" "${BUILD_OUTPUT}" 2>/dev/null || true
 
           # Source .build-env if prepare.sh wrote one (e.g., NODE_OPTIONS)
           for envfile in ".build-env" "$DOC_ROOT/.build-env"; do
