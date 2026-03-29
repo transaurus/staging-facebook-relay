@@ -19,14 +19,6 @@ jobs:
         with:
           ref: 'main'
 
-      - name: 'Setup Node.js'
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: 'Enable Corepack'
-        run: corepack enable
-
       - name: 'Read meta.json'
         id: meta
         run: |
@@ -34,6 +26,16 @@ jobs:
           echo "buildOutput=$(jq -r '.buildOutput // "build"' .github/scripts/meta.json)" >> $GITHUB_OUTPUT
           echo "docusaurusRoot=$(jq -r '.docusaurusRoot // "."' .github/scripts/meta.json)" >> $GITHUB_OUTPUT
           echo "configFile=$(jq -r '.configFile // ""' .github/scripts/meta.json)" >> $GITHUB_OUTPUT
+          echo "nodeVersion=$(jq -r '.nodeVersion // "22"' .github/scripts/meta.json)" >> $GITHUB_OUTPUT
+          cat .github/scripts/meta.json
+
+      - name: 'Setup Node.js'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.meta.outputs.nodeVersion }}
+
+      - name: 'Enable Corepack'
+        run: corepack enable
           cat .github/scripts/meta.json
 
       - name: 'Add i18n locale config to docusaurus.config'
@@ -157,6 +159,11 @@ jobs:
           DOCUSAURUS_IGNORE_SSG_WARNINGS: 'true'
         run: |
           DOC_ROOT="${{ steps.meta.outputs.docusaurusRoot }}"
+
+          # Source .build-env if prepare.sh wrote one (e.g., NODE_OPTIONS)
+          for envfile in ".build-env" "$DOC_ROOT/.build-env"; do
+            [ -f "$envfile" ] && echo "Sourcing $envfile" && source "$envfile"
+          done
 
           if [ -f ".github/scripts/rebuild.sh" ]; then
             chmod +x .github/scripts/rebuild.sh
