@@ -44,6 +44,6 @@ corepack enable
 yarn install
 
 # Build the Docusaurus site
-yarn build
+rm -rf build/ && yarn build
 
 echo "[DONE] Build complete."
