@@ -1,0 +1,86 @@
+{
+  "version.label": {
+    "message": "v20.1.0",
+    "description": "The label for version v20.1.0"
+  },
+  "sidebar.docs.category.Get Started": {
+    "message": "Get Started",
+    "description": "The label for category 'Get Started' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Tutorial": {
+    "message": "Tutorial",
+    "description": "The label for category 'Tutorial' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Feature Guides": {
+    "message": "Feature Guides",
+    "description": "The label for category 'Feature Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Fetching Data": {
+    "message": "Fetching Data",
+    "description": "The label for category 'Fetching Data' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Error Handling": {
+    "message": "Error Handling",
+    "description": "The label for category 'Error Handling' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Updating Data": {
+    "message": "Updating Data",
+    "description": "The label for category 'Updating Data' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Caching": {
+    "message": "Caching",
+    "description": "The label for category 'Caching' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Client Side Data": {
+    "message": "Client Side Data",
+    "description": "The label for category 'Client Side Data' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Relay Resolvers": {
+    "message": "Relay Resolvers",
+    "description": "The label for category 'Relay Resolvers' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.GraphQL Server and Network": {
+    "message": "GraphQL Server and Network",
+    "description": "The label for category 'GraphQL Server and Network' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Typing": {
+    "message": "Typing",
+    "description": "The label for category 'Typing' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Codemods": {
+    "message": "Codemods",
+    "description": "The label for category 'Codemods' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.API Reference": {
+    "message": "API Reference",
+    "description": "The label for category 'API Reference' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Relay Hooks": {
+    "message": "Relay Hooks",
+    "description": "The label for category 'Relay Hooks' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Entrypoint APIs": {
+    "message": "Entrypoint APIs",
+    "description": "The label for category 'Entrypoint APIs' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Relay Runtime": {
+    "message": "Relay Runtime",
+    "description": "The label for category 'Relay Runtime' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.APIReferenceRelayResolvers": {
+    "message": "Relay Resolvers",
+    "description": "The label for category 'Relay Resolvers' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Testing and Debugging": {
+    "message": "Testing and Debugging",
+    "description": "The label for category 'Testing and Debugging' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Principles and Architecture": {
+    "message": "Principles and Architecture",
+    "description": "The label for category 'Principles and Architecture' in sidebar 'docs'"
+  },
+  "sidebar.docs.doc.Interfaces & Polymorphism": {
+    "message": "Interfaces & Polymorphism",
+    "description": "The label for the doc item 'Interfaces & Polymorphism' in sidebar 'docs', linking to the doc tutorial/interfaces-polymorphism"
+  }
+}

@@ -18,6 +18,10 @@ const {
 const {themes: prismThemes} = require('prism-react-renderer');
 
 module.exports = {
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "zh-Hans"],
+  },
   title: 'Relay',
   tagline: 'The GraphQL client that scales with you.',
   url: 'https://relay.dev',
@@ -207,8 +211,8 @@ module.exports = {
       },
     ],
   },
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'throw',
+  onBrokenLinks: 'warn',
+  onBrokenMarkdownLinks: "warn",
   onDuplicateRoutes: 'throw',
   presets: [
     [

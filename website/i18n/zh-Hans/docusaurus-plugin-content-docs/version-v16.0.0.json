@@ -1,0 +1,66 @@
+{
+  "version.label": {
+    "message": "v16.0.0",
+    "description": "The label for version v16.0.0"
+  },
+  "sidebar.docs.category.Tutorial": {
+    "message": "Tutorial",
+    "description": "The label for category 'Tutorial' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Installation": {
+    "message": "Installation",
+    "description": "The label for category 'Installation' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "Guides",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Reusing Cached Data for Rendering": {
+    "message": "Reusing Cached Data for Rendering",
+    "description": "The label for category 'Reusing Cached Data for Rendering' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Managing Data Outside React": {
+    "message": "Managing Data Outside React",
+    "description": "The label for category 'Managing Data Outside React' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Updating Data": {
+    "message": "Updating Data",
+    "description": "The label for category 'Updating Data' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.API Reference": {
+    "message": "API Reference",
+    "description": "The label for category 'API Reference' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Relay Hooks": {
+    "message": "Relay Hooks",
+    "description": "The label for category 'Relay Hooks' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Entrypoint APIs": {
+    "message": "Entrypoint APIs",
+    "description": "The label for category 'Entrypoint APIs' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Relay Runtime": {
+    "message": "Relay Runtime",
+    "description": "The label for category 'Relay Runtime' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Migration and Compatibility": {
+    "message": "Migration and Compatibility",
+    "description": "The label for category 'Migration and Compatibility' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Debugging": {
+    "message": "Debugging",
+    "description": "The label for category 'Debugging' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Principles and Architecture": {
+    "message": "Principles and Architecture",
+    "description": "The label for category 'Principles and Architecture' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Error reference": {
+    "message": "Error reference",
+    "description": "The label for category 'Error reference' in sidebar 'docs'"
+  },
+  "sidebar.docs.doc.Interfaces & Polymorphism": {
+    "message": "Interfaces & Polymorphism",
+    "description": "The label for the doc item 'Interfaces & Polymorphism' in sidebar 'docs', linking to the doc tutorial/interfaces-polymorphism"
+  }
+}
