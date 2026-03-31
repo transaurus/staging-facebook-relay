@@ -159,12 +159,46 @@ jobs:
           DOCUSAURUS_IGNORE_SSG_WARNINGS: 'true'
         run: |
           DOC_ROOT="${{ steps.meta.outputs.docusaurusRoot }}"
+          BUILD_OUTPUT="${{ steps.meta.outputs.buildOutput }}"
+          BUILD_DIR="${DOC_ROOT}/${BUILD_OUTPUT}"
+          [ "$DOC_ROOT" = "." ] && BUILD_DIR="$BUILD_OUTPUT"
+
+          CONFIG_FILE="${{ steps.meta.outputs.configFile }}"
+
+          # Backup existing build so Docusaurus rebuilds all locales (not cached)
+          if [ -d "$BUILD_DIR" ]; then
+            mv "$BUILD_DIR" "${BUILD_DIR}.bak"
+            echo "Backed up $BUILD_DIR → ${BUILD_DIR}.bak"
+          fi
+
+          # Save the i18n-modified config (rebuild.sh may clone fresh source and overwrite it)
+          SAVED_CONFIG=""
+          if [ -n "$CONFIG_FILE" ] && [ -f "$CONFIG_FILE" ] && grep -q "zh-Hans" "$CONFIG_FILE"; then
+            SAVED_CONFIG="/tmp/saved-docusaurus-config-$$"
+            cp "$CONFIG_FILE" "$SAVED_CONFIG"
+            echo "Saved i18n config: $CONFIG_FILE"
+          fi
 
           if [ -f ".github/scripts/rebuild.sh" ]; then
             chmod +x .github/scripts/rebuild.sh
-            # cd to docusaurusRoot so rebuild.sh runs in the right directory
             cd "$DOC_ROOT"
-            bash "$OLDPWD/.github/scripts/rebuild.sh"
+            bash "$OLDPWD/.github/scripts/rebuild.sh" || true
+            cd "$OLDPWD"
+
+            # If rebuild.sh cloned from source and overwrote the config, restore it and re-build
+            if [ -n "$SAVED_CONFIG" ] && [ -f "$CONFIG_FILE" ]; then
+              if ! grep -q "zh-Hans" "$CONFIG_FILE"; then
+                echo "Config lost zh-Hans (rebuild.sh cloned fresh source). Restoring and re-building..."
+                cp "$SAVED_CONFIG" "$CONFIG_FILE"
+                # Also copy i18n files into the build source if they're missing
+                if [ -d "i18n" ] && [ ! -d "$DOC_ROOT/i18n" ]; then
+                  cp -r i18n "$DOC_ROOT/"
+                fi
+                cd "$DOC_ROOT"
+                ${{ steps.meta.outputs.buildCommand }} || true
+                cd "$OLDPWD"
+              fi
+            fi
           else
             echo "No rebuild.sh found, using meta.json build command"
             cd "$DOC_ROOT"
@@ -180,6 +214,18 @@ jobs:
 
             # Build
             ${{ steps.meta.outputs.buildCommand }}
+          fi
+
+          # If rebuild failed (no build output), restore backup
+          if [ -d "${BUILD_DIR}.bak" ]; then
+            if [ ! -d "$BUILD_DIR" ] || [ -z "$(find "$BUILD_DIR" -name 'index.html' 2>/dev/null | head -1)" ]; then
+              echo "Rebuild produced no output, restoring backup"
+              rm -rf "$BUILD_DIR"
+              mv "${BUILD_DIR}.bak" "$BUILD_DIR"
+            else
+              echo "Rebuild succeeded, removing backup"
+              rm -rf "${BUILD_DIR}.bak"
+            fi
           fi
 
       - name: 'Verify build output'
